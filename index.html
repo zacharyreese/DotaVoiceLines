@@ -18,11 +18,13 @@
   <header>
     <nav>
       <div class="nav-left">
-        <img src="images/loud_voice.png" alt="Loud Voice Icon" class="nav-logo" />
+        <a href="/">
+          <img src="images/loud_voice.png" alt="Loud Voice Icon" class="nav-logo" />
+        </a>
         <h1>Ultimate Dota 2 Voice Lines List</h1>
       </div>
       <ul class="nav-links">
-        <li><a href="#">Home</a></li>
+        <li><a href="/">Home</a></li>
         <li><a href="#">How To Bind Voice Lines</a></li>
       </ul>
       <div class="search-container">
@@ -37,8 +39,10 @@
   <!-- Main Content -->
   <main>
     <section>
-      <h2>Ultimate Dota 2 Voice Lines List</h2>
-      <p>A central source for all Dota 2 voice lines and their IDs.</p>
+      <div class="main-header">
+        <h2>Ultimate Dota 2 Voice Lines List</h2>
+        <p>A central source for all Dota 2 voice lines and their IDs.</p>
+      </div>
       <div id="voice-lines-list"></div>
     </section>
   </main>
@@ -97,6 +101,84 @@
           }
         });
       });
+      
+      // Initialize sortable columns
+      initializeSorting();
+    }
+
+    // Sortable columns functionality
+    function initializeSorting() {
+      const tables = document.querySelectorAll('#voice-lines-list table');
+      
+      tables.forEach(table => {
+        const headers = table.querySelectorAll('thead th');
+        
+        headers.forEach((header, index) => {
+          header.style.cursor = 'pointer';
+          header.style.userSelect = 'none';
+          header.setAttribute('data-sort-direction', 'none');
+          header.setAttribute('data-column-index', index);
+          
+          // Add sort indicator
+          const sortIndicator = document.createElement('span');
+          sortIndicator.className = 'sort-indicator';
+          sortIndicator.textContent = ' ⇅';
+          header.appendChild(sortIndicator);
+          
+          header.addEventListener('click', function() {
+            sortTable(table, index, header);
+          });
+        });
+      });
+    }
+
+    function sortTable(table, columnIndex, header) {
+      const tbody = table.querySelector('tbody');
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const currentDirection = header.getAttribute('data-sort-direction');
+      const isNumeric = columnIndex === 2; // ID column
+      
+      // Determine new sort direction
+      let newDirection = 'asc';
+      if (currentDirection === 'asc') {
+        newDirection = 'desc';
+      }
+      
+      // Reset all headers in this table
+      table.querySelectorAll('thead th').forEach(th => {
+        th.setAttribute('data-sort-direction', 'none');
+        const indicator = th.querySelector('.sort-indicator');
+        if (indicator) indicator.textContent = ' ⇅';
+      });
+      
+      // Set current header direction
+      header.setAttribute('data-sort-direction', newDirection);
+      const indicator = header.querySelector('.sort-indicator');
+      if (indicator) {
+        indicator.textContent = newDirection === 'asc' ? ' ▲' : ' ▼';
+      }
+      
+      // Sort rows
+      rows.sort((a, b) => {
+        const aCell = a.children[columnIndex];
+        const bCell = b.children[columnIndex];
+        
+        let aValue = aCell.textContent.trim();
+        let bValue = bCell.textContent.trim();
+        
+        if (isNumeric) {
+          aValue = parseInt(aValue) || 0;
+          bValue = parseInt(bValue) || 0;
+          return newDirection === 'asc' ? aValue - bValue : bValue - aValue;
+        } else {
+          return newDirection === 'asc' 
+            ? aValue.localeCompare(bValue, undefined, { sensitivity: 'base' })
+            : bValue.localeCompare(aValue, undefined, { sensitivity: 'base' });
+        }
+      });
+      
+      // Reattach sorted rows
+      rows.forEach(row => tbody.appendChild(row));
     }
   </script>
 </body>

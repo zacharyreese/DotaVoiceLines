@@ -137,6 +137,11 @@ main {
   margin: 0 auto;
 }
 
+.main-header {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 /* Table Styling */
 table {
   width: 100%;
@@ -155,6 +160,24 @@ table th {
   background-color: #2C2C2C;
   font-weight: 600;
   width: 33.33%;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+table th:hover {
+  background-color: #3C3C3C;
+}
+
+table th .sort-indicator {
+  font-size: 1.2em;
+  color: #888888;
+  float: right;
+  margin-left: 0.5rem;
+}
+
+table th[data-sort-direction="asc"] .sort-indicator,
+table th[data-sort-direction="desc"] .sort-indicator {
+  color: #FF6B6B;
 }
 
 table td {
