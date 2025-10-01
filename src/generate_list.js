@@ -37,37 +37,36 @@ Object.keys(groupedByCategory).forEach(category => {
 let html = '';
 
 // Sort categories by TI year (newest first or oldest first based on preference)
-const categoryOrder = ['TI_2021', 'TI_2022', 'TI_2023', 'TI_2024', 'TI_2025'];
+const categoryOrder = ['TI_2025', 'TI_2024', 'TI_2023', 'TI_2022', 'TI_2021'];
 
 categoryOrder.forEach(category => {
     if (groupedByCategory[category] && groupedByCategory[category].length > 0) {
         const title = categoryTitles[category] || category;
-        html += `
-    <div class="category-section">
-        <h2>${title}</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Voice Line</th>
-                    <th>Creator</th>
-                    <th>ID</th>
-                </tr>
-            </thead>
-            <tbody>
+        html += `<div class="category-section">
+    <h2>${title}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Voice Line</th>
+                <th>Creator</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
 `;
         
         groupedByCategory[category].forEach(line => {
-            html += `                <tr>
-                    <td class="voice-line">${escapeHtml(line.message)}</td>
-                    <td class="creator">${escapeHtml(line.source || 'Unknown')}</td>
-                    <td class="id">${escapeHtml(line.message_id)}</td>
-                </tr>
+            html += `            <tr>
+                <td class="voice-line">${escapeHtml(line.message)}</td>
+                <td class="creator">${escapeHtml(line.source || 'Unknown')}</td>
+                <td class="id">${escapeHtml(line.message_id)}</td>
+            </tr>
 `;
         });
         
-        html += `            </tbody>
-        </table>
-    </div>
+        html += `        </tbody>
+    </table>
+</div>
 `;
     }
 });
