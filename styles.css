@@ -214,6 +214,10 @@ table tbody tr:nth-child(even) {
     height: 28px;
   }
 
+  .main-logo {
+    width: 100%;
+  }
+
   /* Main content adjustments */
   main {
     padding: 0.5rem;
