@@ -42,8 +42,9 @@ const categoryOrder = ['TI_2025', 'TI_2024', 'TI_2023', 'TI_2022', 'TI_2021'];
 categoryOrder.forEach(category => {
     if (groupedByCategory[category] && groupedByCategory[category].length > 0) {
         const title = categoryTitles[category] || category;
+        const id = title.toLowerCase().replace(/\s+/g, '-');
         html += `<div class="category-section">
-    <h2>${title}</h2>
+    <h2 id="${id}">${title}</h2>
     <table>
         <thead>
             <tr>

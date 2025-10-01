@@ -8,11 +8,18 @@ I feel limited by the 2 voice chat wheel lines that Valve supplies. I have many 
 
 The issue is that you need the ID of each voice line to bind it to a key, and Valve does not publicly make these IDs available. This project looks to solve that by creating a central repository for all Dota 2 voice lines.
 
+## Table of Contents
+
+- [The International 2025](#the-international-2025)
+- [The International 2024](#the-international-2024)
+- [The International 2023](#the-international-2023)
+- [The International 2022](#the-international-2022)
+- [The International 2021](#the-international-2021)
 
 ## Voice Lines List
 
 <div class="category-section">
-    <h2>The International 2025</h2>
+    <h2 id="the-international-2025">The International 2025</h2>
     <table>
         <thead>
             <tr>
@@ -1091,7 +1098,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
     </table>
 </div>
 <div class="category-section">
-    <h2>The International 2024</h2>
+    <h2 id="the-international-2024">The International 2024</h2>
     <table>
         <thead>
             <tr>
@@ -2175,7 +2182,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
     </table>
 </div>
 <div class="category-section">
-    <h2>The International 2023</h2>
+    <h2 id="the-international-2023">The International 2023</h2>
     <table>
         <thead>
             <tr>
@@ -3349,7 +3356,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
     </table>
 </div>
 <div class="category-section">
-    <h2>The International 2022</h2>
+    <h2 id="the-international-2022">The International 2022</h2>
     <table>
         <thead>
             <tr>
@@ -4323,7 +4330,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
     </table>
 </div>
 <div class="category-section">
-    <h2>The International 2021</h2>
+    <h2 id="the-international-2021">The International 2021</h2>
     <table>
         <thead>
             <tr>
