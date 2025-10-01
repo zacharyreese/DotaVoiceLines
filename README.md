@@ -16,7 +16,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 - [The International 2022](#the-international-2022)
 - [The International 2021](#the-international-2021)
 
-## Voice Lines List
+# Voice Lines List
 
 <div class="category-section">
     <h2 id="the-international-2025">The International 2025</h2>
