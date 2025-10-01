@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ultimate Dota 2 Voice Lines List" />
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="zacreese" data-description="Support me on Buy me a coffee!" data-message="" data-color="#FF5F5F" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+  <title>Dota 2 Voice Lines</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css" />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <nav>
+      <div class="nav-left">
+        <a href="/">
+          <img src="images/loud_voice.png" alt="Loud Voice Icon" class="nav-logo" />
+        </a>
+        <h1>Ultimate Dota 2 Voice Lines List</h1>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/how_to_bind">How To Bind Voice Lines</a></li>
+      </ul>
+      <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search voice lines, creators, or IDs..." />
+        <a href="https://github.com/zacharyreese/DotaVoiceLines" target="_blank" class="github-link" aria-label="View on GitHub">
+          <img src="images/GitHub_dark.svg" alt="GitHub" class="github-icon" />
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <section>
+      <div class="main-header">
+        <h2>How To Bind Voice Lines</h2>
+        <p>Quick guide on how to bind voice lines to keystrokes using the autoexec.cfg file and console commands</p>
+      </div>
+      
+      <div class="guide-content">
+        <h2>Step-by-Step Guide: Creating an Autoexec File</h3>
+        
+        <div class="step">
+          <h3>Step 1: Locate Your Dota 2 Directory</h3>
+          <p>First, you need to find where Dota 2 is installed on your computer. The default locations are:</p>
+          <ul>
+            <li><strong>Windows:</strong> <code>C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\cfg</code></li>
+            <li><strong>Mac:</strong> <code>~/Library/Application Support/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
+            <li><strong>Linux:</strong> <code>~/.local/share/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
+          </ul>
+          <p><strong>Note:</strong> If you installed Steam in a custom location, navigate to that location instead.</p>
+        </div>
+
+        <div class="step">
+          <h3>Step 2: Navigate to the CFG Folder</h3>
+          <p>Once you've found your Dota 2 installation, navigate to:</p>
+          <p><code>dota 2 beta/game/dota/cfg</code></p>
+          <p>This is where all configuration files are stored.</p>
+        </div>
+
+        <div class="step">
+          <h3>Step 3: Create the Autoexec File</h3>
+          <p>In the <code>cfg</code> folder, create a new text file and name it:</p>
+          <p><code>autoexec.cfg</code></p>
+          <p><strong>Important:</strong> Make sure the file extension is <code>.cfg</code> and not <code>.txt</code>. You may need to enable "Show file extensions" in your file explorer settings to see and change this.</p>
+          <div class="tip">
+            <strong>💡 Tip:</strong> On Windows, you can create this file by right-clicking in the folder, selecting "New" → "Text Document", then renaming it to <code>autoexec.cfg</code> (including the extension).
+          </div>
+          <img src="images/how-to/autoexec_dir.webp" alt="Autoexec File" class="guide-image" />
+        </div>
+
+        <div class="step">
+          <h3>Step 4: Add Your Voice Line Binds</h3>
+          <p>Open the <code>autoexec.cfg</code> file with any text editor (Notepad, Notepad++, TextEdit, etc.) and add your binds. Here's the format:</p>
+          <h4><code>bind "KEY" "chatwheel_say VOICE_LINE_ID"</code></h4>
+          <p><strong>Example binds:</strong></p>
+          <pre><code>// Basic voice line binds
+bind "KP_0" "chatwheel_say 401003"    // Bind Ephey: 'Sorry!' to Num Pad 0
+bind "M" "chatwheel_say 401275"       // Bind Slacks: 'Owwww!' to keyboard letter M
+bind "UPARROW" "chatwheel_say 401683" // Bind Tsunami: 'Stop!' to Up Arrow
+bind "F4" "chatwheel_say 401258"      // Bind Fogged: 'Not bad at all' to F4
+
+// You can also add comments using //
+bind "F2" "chatwheel_say 123"  // This is a comment</code></pre>
+          <div class="tip">
+            <p><strong>💡 Tip:</strong> Browse the voice lines on the home page to find the IDs you want to use!</p>
+            <p><strong>🟥 Note:</strong> You can only bind voice lines that you own.</p>  
+          </div>
+          <img src="images/how-to/autoexec_notepad.webp" alt="Autoexec Notepad" class="guide-image" />
+        </div>
+
+        <div class="step">
+          <h3>Step 5: Save the File</h3>
+          <p>Save the <code>autoexec.cfg</code> file and close your text editor.</p>
+        </div>
+
+        <div class="step">
+          <h3>Step 6: Enable the Developer Console (If Not Already Enabled)</h3>
+          <p>In Dota 2:</p>
+          <ol>
+            <li>Go to <strong>Settings</strong> → <strong>Advanced Options</strong></li>
+            <li>Check the box for <strong>"Enable Developer Console"</strong></li>
+            <li>Set a key to open the console (default is the <code>`</code> key)</li>
+          </ol>
+        </div>
+
+        <div class="step">
+          <h3>Step 7: Test Your Binds</h3>
+          <p>Launch Dota 2 and open the console (press <code>`</code> or your chosen console key). Type:</p>
+          <pre><code>exec autoexec.cfg</code></pre>
+          <p>This will manually execute your autoexec file. Your binds should now work!</p>
+          <p><strong>Note:</strong> The autoexec file should load automatically each time you start Dota 2, but you can always run this command to reload it after making changes.</p>
+        </div>
+
+        <div class="common-keys">
+          <h3>Common Key Names for Binds</h3>
+          <ul>
+            <li><strong>Numpad:</strong> KP_1, KP_2, KP_3, etc.</li>
+            <li><strong>Function Keys:</strong> F1, F2, F3, etc.</li>
+            <li><strong>Letters:</strong> A, B, C, etc.</li>
+            <li><strong>Special Keys:</strong> SPACE, SHIFT, CTRL, ALT, ENTER, TAB, ESCAPE</li>
+            <li><strong>Mouse Buttons:</strong> MOUSE3, MOUSE4, MOUSE5</li>
+          </ul>
+        </div>
+
+        <div class="troubleshooting">
+          <h3>Troubleshooting</h3>
+          <ul>
+            <li><strong>Binds not working?</strong> Make sure the file is named exactly <code>autoexec.cfg</code> and is in the correct folder.</li>
+            <li><strong>File extension wrong?</strong> Enable "Show file extensions" in Windows Explorer or Finder to ensure the file isn't actually <code>autoexec.cfg.txt</code>.</li>
+            <li><strong>Need to reload?</strong> Open console and type <code>exec autoexec.cfg</code> to reload your configuration without restarting Dota 2.</li>
+            <li><strong>Key already in use?</strong> Check your in-game keybinds to make sure you're not creating conflicts.</li>
+          </ul>
+        </div>
+
+        <div class="full-keybind-list">
+          <h3>Full Keybind List</h3>
+          <p>Below is a comprehensive list of all available keys you can bind in Dota 2. Copy any section or the entire list to your autoexec.cfg file and replace the voice line IDs as needed.</p>
+          <pre><code>// ====================
+// Mouse
+// ====================
+bind "MOUSE1" "chatwheel_say 401003"
+bind "MOUSE2" "chatwheel_say 401003"
+bind "MOUSE3" "chatwheel_say 401003"
+bind "MOUSE4" "chatwheel_say 401003"
+bind "MOUSE5" "chatwheel_say 401003"
+bind "MWHEELUP" "chatwheel_say 401003"
+bind "MWHEELDOWN" "chatwheel_say 401003"
+bind "MWHEELLEFT" "chatwheel_say 401003"
+bind "MWHEELRIGHT" "chatwheel_say 401003"
+
+// ====================
+// Function Keys
+// ====================
+bind "F1" "chatwheel_say 401003"
+bind "F2" "chatwheel_say 401003"
+bind "F3" "chatwheel_say 401003"
+bind "F4" "chatwheel_say 401003"
+bind "F5" "chatwheel_say 401003"
+bind "F6" "chatwheel_say 401003"
+bind "F7" "chatwheel_say 401003"
+bind "F8" "chatwheel_say 401003"
+bind "F9" "chatwheel_say 401003"
+bind "F10" "chatwheel_say 401003"
+bind "F11" "chatwheel_say 401003"
+bind "F12" "chatwheel_say 401003"
+
+// ====================
+// Number Row (top of keyboard)
+// ====================
+bind "0" "chatwheel_say 401003"
+bind "1" "chatwheel_say 401003"
+bind "2" "chatwheel_say 401003"
+bind "3" "chatwheel_say 401003"
+bind "4" "chatwheel_say 401003"
+bind "5" "chatwheel_say 401003"
+bind "6" "chatwheel_say 401003"
+bind "7" "chatwheel_say 401003"
+bind "8" "chatwheel_say 401003"
+bind "9" "chatwheel_say 401003"
+
+// ====================
+// Numpad
+// ====================
+bind "KP_0" "chatwheel_say 401003"          // Numpad 0
+bind "KP_1" "chatwheel_say 401003"          // Numpad 1
+bind "KP_2" "chatwheel_say 401003"          // Numpad 2
+bind "KP_3" "chatwheel_say 401003"          // Numpad 3
+bind "KP_4" "chatwheel_say 401003"          // Numpad 4
+bind "KP_5" "chatwheel_say 401003"          // Numpad 5
+bind "KP_6" "chatwheel_say 401003"          // Numpad 6
+bind "KP_7" "chatwheel_say 401003"          // Numpad 7
+bind "KP_8" "chatwheel_say 401003"          // Numpad 8
+bind "KP_9" "chatwheel_say 401003"          // Numpad 9
+bind "KP_SLASH" "chatwheel_say 401003"      // /
+bind "KP_MULTIPLY" "chatwheel_say 401003"   // *
+bind "KP_MINUS" "chatwheel_say 401003"      // -
+bind "KP_PLUS" "chatwheel_say 401003"       // +
+bind "KP_ENTER" "chatwheel_say 401003"      // Enter
+bind "KP_DEL" "chatwheel_say 401003"        // .
+bind "KP_NUMLOCK" "chatwheel_say 401003"
+
+// ====================
+// Arrow Keys
+// ====================
+bind "UPARROW" "chatwheel_say 401003"
+bind "DOWNARROW" "chatwheel_say 401003"
+bind "LEFTARROW" "chatwheel_say 401003"
+bind "RIGHTARROW" "chatwheel_say 401003"
+
+// ====================
+// Letters A–Z
+// ====================
+bind "A" "chatwheel_say 401003"
+bind "B" "chatwheel_say 401003"
+bind "C" "chatwheel_say 401003"
+bind "D" "chatwheel_say 401003"
+bind "E" "chatwheel_say 401003"
+bind "F" "chatwheel_say 401003"
+bind "G" "chatwheel_say 401003"
+bind "H" "chatwheel_say 401003"
+bind "I" "chatwheel_say 401003"
+bind "J" "chatwheel_say 401003"
+bind "K" "chatwheel_say 401003"
+bind "L" "chatwheel_say 401003"
+bind "M" "chatwheel_say 401003"
+bind "N" "chatwheel_say 401003"
+bind "O" "chatwheel_say 401003"
+bind "P" "chatwheel_say 401003"
+bind "Q" "chatwheel_say 401003"
+bind "R" "chatwheel_say 401003"
+bind "S" "chatwheel_say 401003"
+bind "T" "chatwheel_say 401003"
+bind "U" "chatwheel_say 401003"
+bind "V" "chatwheel_say 401003"
+bind "W" "chatwheel_say 401003"
+bind "X" "chatwheel_say 401003"
+bind "Y" "chatwheel_say 401003"
+bind "Z" "chatwheel_say 401003"
+
+// ====================
+// Punctuation / Symbols
+// ====================
+bind "`" "chatwheel_say 401003"   // Tilde / Backquote
+bind "-" "chatwheel_say 401003"
+bind "=" "chatwheel_say 401003"
+bind "[" "chatwheel_say 401003"
+bind "]" "chatwheel_say 401003"
+bind "\\" "chatwheel_say 401003"
+bind ";" "chatwheel_say 401003"
+bind "'" "chatwheel_say 401003"
+bind "," "chatwheel_say 401003"
+bind "." "chatwheel_say 401003"
+bind "/" "chatwheel_say 401003"
+
+// ====================
+// Control / Special Keys
+// ====================
+bind "SPACE" "chatwheel_say 401003"
+bind "TAB" "chatwheel_say 401003"
+bind "ENTER" "chatwheel_say 401003"
+bind "ESCAPE" "chatwheel_say 401003"
+bind "BACKSPACE" "chatwheel_say 401003"
+bind "INSERT" "chatwheel_say 401003"
+bind "DELETE" "chatwheel_say 401003"
+bind "HOME" "chatwheel_say 401003"
+bind "END" "chatwheel_say 401003"
+bind "PAGEUP" "chatwheel_say 401003"
+bind "PAGEDOWN" "chatwheel_say 401003"
+bind "SHIFT" "chatwheel_say 401003"
+bind "CTRL" "chatwheel_say 401003"
+bind "ALT" "chatwheel_say 401003"
+bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <img src="images/dota_voice_lines_logo.webp" alt="Dota Voice Lines Logo" class="main-logo" />
+    <p>Thanks to Valve for making the best game in the world ❤️</p>
+  </footer>
+
+</body>
+</html>

@@ -158,6 +158,21 @@ main {
   font-size: 1.3rem;
 }
 
+.guide-content {
+  padding-top: 1rem;
+}
+
+.guide-image {
+  padding-top: 1rem;
+  width: 75%;
+}
+
+@media (max-width: 768px) {
+  .guide-image {
+    width: 100%;
+  }
+}
+
 .toc-links {
   list-style: none;
   padding: 0;
@@ -249,7 +264,7 @@ table tbody tr:nth-child(even) {
   /* Navigation adjustments */
   nav {
     flex-direction: column;
-    gap: 1rem;
+    gap: .5rem;
     padding: 1rem;
   }
 
@@ -347,7 +362,7 @@ table tbody tr:nth-child(even) {
   }
 
   nav h1 {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .nav-links {
