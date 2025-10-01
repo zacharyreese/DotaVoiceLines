@@ -134,6 +134,7 @@ main {
   width: 100%;
   max-width: 1400px;
   padding: 2rem;
+  padding-top: 1rem;
   margin: 0 auto;
 }
 
