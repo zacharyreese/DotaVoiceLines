@@ -10,6 +10,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 
 ## Table of Contents
 
+- [How to bind voice lines](#how-to-bind-voice-lines)
 - [The International 2025](#the-international-2025)
 - [The International 2024](#the-international-2024)
 - [The International 2023](#the-international-2023)
