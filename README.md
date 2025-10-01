@@ -10,13 +10,12 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 
 ## Table of Contents
 
-- [How To Bind Voice Lines](#how-to-bind-voice-lines)
-
 - [The International 2025](#the-international-2025)
 - [The International 2024](#the-international-2024)
 - [The International 2023](#the-international-2023)
 - [The International 2022](#the-international-2022)
 - [The International 2021](#the-international-2021)
+- [How To Bind Voice Lines](#how-to-bind-voice-lines)
 
 # Voice Lines List
 
@@ -4969,3 +4968,19 @@ bind "ALT" "chatwheel_say 401003"
 bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
   </div>
 </div>
+
+
+# How I extracted voice line IDs
+
+1. Install VPKEdit https://developer.valvesoftware.com/wiki/VPKEdit
+2. Extract pak01_dir.vpk "C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\pak01_dir.vpk"
+  - This contains most of the Dota 2 internal files
+3. String search for a few voice lines from different Internationals to find most of the voice lines in the following files
+  - 'dota2/scripts/chat_wheels/ti2021_casters_chat_wheel.txt' (TI 2021)
+  - 'dota2/scripts/chat_wheels/stickers_chat_wheel_6.txt' (TI 2022)
+  - 'dota2/scripts/chat_wheels/stickers_chat_wheel_10.txt' (TI 2023)
+  - 'dota2/scripts/chat_wheels/stickers_chat_wheel_11.txt' (TI 2024)
+  - 'dota2/scripts/chat_wheels/stickers_chat_wheel_12.txt' (TI 2025)
+4. Wrote a custom parser to extract voice line values in these files and convert to JSON
+5. Compiled all voice lines into a nice table
+
