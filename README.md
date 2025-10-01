@@ -4732,43 +4732,43 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 # How to bind voice lines
 
 <div class="guide-content">
-        <h2>Step-by-Step Guide: Creating an Autoexec File</h3>
-        
-        <div class="step">
-          <h3>Step 1: Locate Your Dota 2 Directory</h3>
-          <p>First, you need to find where Dota 2 is installed on your computer. The default locations are:</p>
-          <ul>
-            <li><strong>Windows:</strong> <code>C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\cfg</code></li>
-            <li><strong>Mac:</strong> <code>~/Library/Application Support/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
-            <li><strong>Linux:</strong> <code>~/.local/share/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
-          </ul>
-          <p><strong>Note:</strong> If you installed Steam in a custom location, navigate to that location instead.</p>
-        </div>
+  <h2>Step-by-Step Guide: Creating an Autoexec File</h2>
+  
+  <div class="step">
+    <h3>Step 1: Locate Your Dota 2 Directory</h3>
+    <p>First, you need to find where Dota 2 is installed on your computer. The default locations are:</p>
+    <ul>
+      <li><strong>Windows:</strong> <code>C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\cfg</code></li>
+      <li><strong>Mac:</strong> <code>~/Library/Application Support/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
+      <li><strong>Linux:</strong> <code>~/.local/share/Steam/steamapps/common/dota 2 beta/game/dota/cfg</code></li>
+    </ul>
+    <p><strong>Note:</strong> If you installed Steam in a custom location, navigate to that location instead.</p>
+  </div>
 
-        <div class="step">
-          <h3>Step 2: Navigate to the CFG Folder</h3>
-          <p>Once you've found your Dota 2 installation, navigate to:</p>
-          <p><code>dota 2 beta/game/dota/cfg</code></p>
-          <p>This is where all configuration files are stored.</p>
-        </div>
+  <div class="step">
+    <h3>Step 2: Navigate to the CFG Folder</h3>
+    <p>Once you've found your Dota 2 installation, navigate to:</p>
+    <p><code>dota 2 beta/game/dota/cfg</code></p>
+    <p>This is where all configuration files are stored.</p>
+  </div>
 
-        <div class="step">
-          <h3>Step 3: Create the Autoexec File</h3>
-          <p>In the <code>cfg</code> folder, create a new text file and name it:</p>
-          <p><code>autoexec.cfg</code></p>
-          <p><strong>Important:</strong> Make sure the file extension is <code>.cfg</code> and not <code>.txt</code>. You may need to enable "Show file extensions" in your file explorer settings to see and change this.</p>
-          <div class="tip">
-            <strong>💡 Tip:</strong> On Windows, you can create this file by right-clicking in the folder, selecting "New" → "Text Document", then renaming it to <code>autoexec.cfg</code> (including the extension).
-          </div>
-          <img src="images/how-to/autoexec_dir.webp" alt="Autoexec File" class="guide-image" />
-        </div>
+  <div class="step">
+    <h3>Step 3: Create the Autoexec File</h3>
+    <p>In the <code>cfg</code> folder, create a new text file and name it:</p>
+    <p><code>autoexec.cfg</code></p>
+    <p><strong>Important:</strong> Make sure the file extension is <code>.cfg</code> and not <code>.txt</code>. You may need to enable "Show file extensions" in your file explorer settings to see and change this.</p>
+    <div class="tip">
+      <strong>💡 Tip:</strong> On Windows, you can create this file by right-clicking in the folder, selecting "New" → "Text Document", then renaming it to <code>autoexec.cfg</code> (including the extension).
+    </div>
+    <img src="images/how-to/autoexec_dir.webp" alt="Autoexec File" class="guide-image" />
+  </div>
 
-        <div class="step">
-          <h3>Step 4: Add Your Voice Line Binds</h3>
-          <p>Open the <code>autoexec.cfg</code> file with any text editor (Notepad, Notepad++, TextEdit, etc.) and add your binds. Here's the format:</p>
-          <h4><code>bind "KEY" "chatwheel_say VOICE_LINE_ID"</code></h4>
-          <p><strong>Example binds:</strong></p>
-          <pre><code>// Basic voice line binds
+  <div class="step">
+    <h3>Step 4: Add Your Voice Line Binds</h3>
+    <p>Open the <code>autoexec.cfg</code> file with any text editor (Notepad, Notepad++, TextEdit, etc.) and add your binds. Here's the format:</p>
+    <h4><code>bind "KEY" "chatwheel_say VOICE_LINE_ID"</code></h4>
+    <p><strong>Example binds:</strong></p>
+    <pre><code>// Basic voice line binds
 bind "KP_0" "chatwheel_say 401003"    // Bind Ephey: 'Sorry!' to Num Pad 0
 bind "M" "chatwheel_say 401275"       // Bind Slacks: 'Owwww!' to keyboard letter M
 bind "UPARROW" "chatwheel_say 401683" // Bind Tsunami: 'Stop!' to Up Arrow
@@ -4776,61 +4776,61 @@ bind "F4" "chatwheel_say 401258"      // Bind Fogged: 'Not bad at all' to F4
 
 // You can also add comments using //
 bind "F2" "chatwheel_say 123"  // This is a comment</code></pre>
-          <div class="tip">
-            <p><strong>💡 Tip:</strong> Browse the voice lines on the home page to find the IDs you want to use!</p>
-            <p><strong>🟥 Note:</strong> You can only bind voice lines that you own.</p>  
-          </div>
-          <img src="images/how-to/autoexec_notepad.webp" alt="Autoexec Notepad" class="guide-image" />
-        </div>
+    <div class="tip">
+      <p><strong>💡 Tip:</strong> Browse the voice lines on the home page to find the IDs you want to use!</p>
+      <p><strong>🟥 Note:</strong> You can only bind voice lines that you own.</p>  
+    </div>
+    <img src="images/how-to/autoexec_notepad.webp" alt="Autoexec Notepad" class="guide-image" />
+  </div>
 
-        <div class="step">
-          <h3>Step 5: Save the File</h3>
-          <p>Save the <code>autoexec.cfg</code> file and close your text editor.</p>
-        </div>
+  <div class="step">
+    <h3>Step 5: Save the File</h3>
+    <p>Save the <code>autoexec.cfg</code> file and close your text editor.</p>
+  </div>
 
-        <div class="step">
-          <h3>Step 6: Enable the Developer Console (If Not Already Enabled)</h3>
-          <p>In Dota 2:</p>
-          <ol>
-            <li>Go to <strong>Settings</strong> → <strong>Advanced Options</strong></li>
-            <li>Check the box for <strong>"Enable Developer Console"</strong></li>
-            <li>Set a key to open the console (default is the <code>`</code> key)</li>
-          </ol>
-        </div>
+  <div class="step">
+    <h3>Step 6: Enable the Developer Console (If Not Already Enabled)</h3>
+    <p>In Dota 2:</p>
+    <ol>
+      <li>Go to <strong>Settings</strong> → <strong>Advanced Options</strong></li>
+      <li>Check the box for <strong>"Enable Developer Console"</strong></li>
+      <li>Set a key to open the console (default is the <code>`</code> key)</li>
+    </ol>
+  </div>
 
-        <div class="step">
-          <h3>Step 7: Test Your Binds</h3>
-          <p>Launch Dota 2 and open the console (press <code>`</code> or your chosen console key). Type:</p>
-          <pre><code>exec autoexec.cfg</code></pre>
-          <p>This will manually execute your autoexec file. Your binds should now work!</p>
-          <p><strong>Note:</strong> The autoexec file should load automatically each time you start Dota 2, but you can always run this command to reload it after making changes.</p>
-        </div>
+  <div class="step">
+    <h3>Step 7: Test Your Binds</h3>
+    <p>Launch Dota 2 and open the console (press <code>`</code> or your chosen console key). Type:</p>
+    <pre><code>exec autoexec.cfg</code></pre>
+    <p>This will manually execute your autoexec file. Your binds should now work!</p>
+    <p><strong>Note:</strong> The autoexec file should load automatically each time you start Dota 2, but you can always run this command to reload it after making changes.</p>
+  </div>
 
-        <div class="common-keys">
-          <h3>Common Key Names for Binds</h3>
-          <ul>
-            <li><strong>Numpad:</strong> KP_1, KP_2, KP_3, etc.</li>
-            <li><strong>Function Keys:</strong> F1, F2, F3, etc.</li>
-            <li><strong>Letters:</strong> A, B, C, etc.</li>
-            <li><strong>Special Keys:</strong> SPACE, SHIFT, CTRL, ALT, ENTER, TAB, ESCAPE</li>
-            <li><strong>Mouse Buttons:</strong> MOUSE3, MOUSE4, MOUSE5</li>
-          </ul>
-        </div>
+  <div class="common-keys">
+    <h3>Common Key Names for Binds</h3>
+    <ul>
+      <li><strong>Numpad:</strong> KP_1, KP_2, KP_3, etc.</li>
+      <li><strong>Function Keys:</strong> F1, F2, F3, etc.</li>
+      <li><strong>Letters:</strong> A, B, C, etc.</li>
+      <li><strong>Special Keys:</strong> SPACE, SHIFT, CTRL, ALT, ENTER, TAB, ESCAPE</li>
+      <li><strong>Mouse Buttons:</strong> MOUSE3, MOUSE4, MOUSE5</li>
+    </ul>
+  </div>
 
-        <div class="troubleshooting">
-          <h3>Troubleshooting</h3>
-          <ul>
-            <li><strong>Binds not working?</strong> Make sure the file is named exactly <code>autoexec.cfg</code> and is in the correct folder.</li>
-            <li><strong>File extension wrong?</strong> Enable "Show file extensions" in Windows Explorer or Finder to ensure the file isn't actually <code>autoexec.cfg.txt</code>.</li>
-            <li><strong>Need to reload?</strong> Open console and type <code>exec autoexec.cfg</code> to reload your configuration without restarting Dota 2.</li>
-            <li><strong>Key already in use?</strong> Check your in-game keybinds to make sure you're not creating conflicts.</li>
-          </ul>
-        </div>
+  <div class="troubleshooting">
+    <h3>Troubleshooting</h3>
+    <ul>
+      <li><strong>Binds not working?</strong> Make sure the file is named exactly <code>autoexec.cfg</code> and is in the correct folder.</li>
+      <li><strong>File extension wrong?</strong> Enable "Show file extensions" in Windows Explorer or Finder to ensure the file isn't actually <code>autoexec.cfg.txt</code>.</li>
+      <li><strong>Need to reload?</strong> Open console and type <code>exec autoexec.cfg</code> to reload your configuration without restarting Dota 2.</li>
+      <li><strong>Key already in use?</strong> Check your in-game keybinds to make sure you're not creating conflicts.</li>
+    </ul>
+  </div>
 
-        <div class="full-keybind-list">
-          <h3>Full Keybind List</h3>
-          <p>Below is a comprehensive list of all available keys you can bind in Dota 2. Copy any section or the entire list to your autoexec.cfg file and replace the voice line IDs as needed.</p>
-          <pre><code>// ====================
+  <div class="full-keybind-list">
+    <h3>Full Keybind List</h3>
+    <p>Below is a comprehensive list of all available keys you can bind in Dota 2. Copy any section or the entire list to your autoexec.cfg file and replace the voice line IDs as needed.</p>
+    <pre><code>// ====================
 // Mouse
 // ====================
 bind "MOUSE1" "chatwheel_say 401003"
