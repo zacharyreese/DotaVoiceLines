@@ -9,16 +9,301 @@ body {
   font-family: Arial, sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+footer {
+  text-align: center;
 }
 
 a {
   color: #FFFFFF;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-nav ul {
+a:hover {
+  color: #FF6B6B;
+}
+
+/* Header Navigation Bar */
+header {
+  background-color: #2C2C2C;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-logo {
+  height: 40px;
+  width: auto;
+}
+
+nav h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nav-links {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  background-color: #3C3C3C;
+  color: #FF6B6B;
+}
+
+/* Search Bar */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#search-bar {
+  width: 250px;
+  padding: 0.5rem 0.75rem;
+  background-color: #1B1B1B;
+  border: 2px solid #3C3C3C;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#search-bar::placeholder {
+  color: #888888;
+}
+
+#search-bar:focus {
+  outline: none;
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* GitHub Icon */
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.github-link:hover {
+  opacity: 0.7;
+}
+
+.github-icon {
+  width: 32px;
+  height: 32px;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1400px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+table th,
+table td {
+  border: 1px solid #3C3C3C;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+table th {
+  background-color: #2C2C2C;
+  font-weight: 600;
+  width: 33.33%;
+}
+
+table td {
+  width: 33.33%;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #242424;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #1B1B1B;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  /* Fix box-sizing for proper width calculation */
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Navigation adjustments */
+  nav {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .nav-left {
+    width: 100%;
+    justify-content: center;
+  }
+
+  nav h1 {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .search-container {
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  #search-bar {
+    flex: 1;
+  }
+
+  .github-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Main content adjustments */
+  main {
+    padding: 0.5rem;
+    overflow-x: hidden;
+  }
+
+  /* Table responsiveness */
+  table {
+    width: 100%;
+    table-layout: fixed;
+    margin: 0.5rem 0;
+  }
+
+  table th,
+  table td {
+    padding: 0.4rem 0.25rem;
+    font-size: 0.85rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Adjust column widths for mobile */
+  table th:nth-child(1),
+  table td:nth-child(1) {
+    width: 50%;
+  }
+
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    width: 30%;
+  }
+
+  table th:nth-child(3),
+  table td:nth-child(3) {
+    width: 20%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small screens */
+  .nav-logo {
+    height: 30px;
+  }
+
+  nav h1 {
+    font-size: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .nav-links li a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  main {
+    padding: 0.25rem;
+  }
+
+  main h2 {
+    font-size: 1.3rem;
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
+  table th,
+  table td {
+    padding: 0.3rem 0.2rem;
+    font-size: 0.75rem;
+  }
+
+  /* Even more compact columns on very small screens */
+  table th:nth-child(1),
+  table td:nth-child(1) {
+    width: 45%;
+  }
+
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    width: 35%;
+  }
+
+  table th:nth-child(3),
+  table td:nth-child(3) {
+    width: 20%;
+  }
 }

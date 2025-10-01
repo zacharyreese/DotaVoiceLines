@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Ultimate Dota 2 Voice Lines List" />
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="zacreese" data-description="Support me on Buy me a coffee!" data-message="" data-color="#FF5F5F" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
   <title>Dota 2 Voice Lines List</title>
 
   <!-- CSS -->
@@ -16,11 +17,20 @@
   <!-- Header -->
   <header>
     <nav>
-      <h1>Ultimate Dota 2 Voice Lines List</h1>
-      <ul>
+      <div class="nav-left">
+        <img src="images/loud_voice.png" alt="Loud Voice Icon" class="nav-logo" />
+        <h1>Ultimate Dota 2 Voice Lines List</h1>
+      </div>
+      <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#">How To Bind Voice Lines</a></li>
       </ul>
+      <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search voice lines, creators, or IDs..." />
+        <a href="https://github.com/zacharyreese/DotaVoiceLines" target="_blank" class="github-link" aria-label="View on GitHub">
+          <img src="images/GitHub_dark.svg" alt="GitHub" class="github-icon" />
+        </a>
+      </div>
     </nav>
   </header>
 
@@ -29,15 +39,65 @@
     <section>
       <h2>Ultimate Dota 2 Voice Lines List</h2>
       <p>A central source for all Dota 2 voice lines and their IDs.</p>
+      <div id="voice-lines-list"></div>
     </section>
   </main>
 
   <!-- Footer -->
   <footer>
-    <p>Thanks to Valve for making the best game in the world</p>
+    <img src="images/dota_voice_lines_logo.webp" alt="Dota Voice Lines Logo" class="main-logo" />
+    <p>Thanks to Valve for making the best game in the world ❤️</p>
   </footer>
 
   <!-- JavaScript -->
-  <!-- <script src="script.js"></script> -->
+  <script>
+    // Load voice lines list
+    fetch('src/voice_lines_list.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('voice-lines-list').innerHTML = data;
+        
+        // Initialize search functionality after content is loaded
+        initializeSearch();
+      })
+      .catch(error => {
+        console.error('Error loading voice lines:', error);
+        document.getElementById('voice-lines-list').innerHTML = '<p>Error loading voice lines. Please try again later.</p>';
+      });
+
+    // Search functionality
+    function initializeSearch() {
+      const searchBar = document.getElementById('search-bar');
+      
+      searchBar.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const tables = document.querySelectorAll('#voice-lines-list table');
+        
+        tables.forEach(table => {
+          const rows = table.querySelectorAll('tbody tr');
+          let visibleRowCount = 0;
+          
+          rows.forEach(row => {
+            const voiceLine = row.querySelector('.voice-line')?.textContent.toLowerCase() || '';
+            const creator = row.querySelector('.creator')?.textContent.toLowerCase() || '';
+            const id = row.querySelector('.id')?.textContent.toLowerCase() || '';
+            
+            if (voiceLine.includes(searchTerm) || creator.includes(searchTerm) || id.includes(searchTerm)) {
+              row.style.display = '';
+              visibleRowCount++;
+            } else {
+              row.style.display = 'none';
+            }
+          });
+          
+          // Hide category section if no rows are visible
+          const categorySection = table.closest('.category-section');
+          if (categorySection) {
+            categorySection.style.display = visibleRowCount > 0 ? '' : 'none';
+          }
+        });
+      });
+    }
+  </script>
 </body>
 </html>
