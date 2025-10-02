@@ -4974,7 +4974,8 @@ bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
 # How I extracted voice line IDs
 
 1. Install VPKEdit https://developer.valvesoftware.com/wiki/VPKEdit
-2. Extract pak01_dir.vpk "C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\pak01_dir.vpk"
+2. Extract pak01_dir.vpk 
+  - "C:\Program Files (x86)\Steam\steamapps\common\dota 2 beta\game\dota\pak01_dir.vpk"
   - This contains most of the Dota 2 internal files
 3. String search for a few voice lines from different Internationals to find most of the voice lines in the following files
   - 'dota2/scripts/chat_wheels/ti2021_casters_chat_wheel.txt' (TI 2021)
