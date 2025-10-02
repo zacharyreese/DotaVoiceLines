@@ -15,7 +15,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 - [The International 2023](#the-international-2023)
 - [The International 2022](#the-international-2022)
 - [The International 2021](#the-international-2021)
-- [Team Voice Lines](#the-international-2021)
+- [Team Voice Lines](#team)
 - [How To Bind Voice Lines](#how-to-bind-voice-lines)
 - [How I Extracted the Voice Line IDs](#how-i-extracted-voice-line-ids)
 - [What's Missing](#whats-missing)
@@ -9138,7 +9138,6 @@ bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
 While this list contains most voice lines from the game, there are still a few missing
 - Dota Plus voice lines
 - Community voice lines
-- Team Fan Pack voice lines
 
 These voice lines require cross-referencing localization files and matching IDs to other files. These will come soon!
 
