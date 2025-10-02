@@ -4986,3 +4986,11 @@ bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
 4. Wrote a custom parser to extract voice line values in these files and convert to JSON
 5. Compiled all voice lines into a nice table
 
+
+# What's left
+
+While this list contains most voice lines from the game, there are still a few missing
+- Dota Plus voice lines
+- Community voice lines
+- Team Fan Pack voice lines
+
