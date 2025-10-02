@@ -9129,6 +9129,7 @@ bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
 - '/scripts/chat_wheels/stickers_chat_wheel_10.txt' (TI 2023)
 - '/scripts/chat_wheels/stickers_chat_wheel_11.txt' (TI 2024)
 - '/scripts/chat_wheels/stickers_chat_wheel_12.txt' (TI 2025)
+- '/scripts/chat_wheels/teamfandom_chat_wheel_xxx' (Team Voice Lines)
 4. Wrote a custom parser to extract voice line values in these files and convert to JSON
 5. Compiled all voice lines into a nice table
 
