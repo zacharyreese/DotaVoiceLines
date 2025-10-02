@@ -1,24 +1,58 @@
 const fs = require("fs");
+const path = require("path");
 const { parseKeyValues } = require("./file_parser");
 
-// Files to process
-const filesToProcess = [
-  'dota2/scripts/chat_wheels/stickers_chat_wheel_6.txt',
-  'dota2/scripts/chat_wheels/stickers_chat_wheel_10.txt',
-  'dota2/scripts/chat_wheels/stickers_chat_wheel_11.txt',
-  'dota2/scripts/chat_wheels/stickers_chat_wheel_12.txt',
-  'dota2/scripts/chat_wheels/ti2021_casters_chat_wheel.txt',
-];
+// Directory containing chat wheel files
+const chatWheelsDir = '../dota2/scripts/chat_wheels';
+const localizationFile = '../dota2/resource/localization/teamfandom_english.txt';
+
 const allVoiceLines = [];
 const allParsedData = {};
+let localizationData = {};
 
 let filesProcessed = 0;
+let filesToProcess = [];
 
-// Process each stickers file
+// First, load the localization file
+console.log('Loading localization file...');
+try {
+  const localizationContent = fs.readFileSync(localizationFile, 'utf8');
+  const parsed = parseKeyValues(localizationContent);
+  if (parsed.lang?.Tokens) {
+    localizationData = parsed.lang.Tokens;
+    console.log(`Loaded ${Object.keys(localizationData).length} localization entries`);
+  }
+} catch (err) {
+  console.error('Error loading localization file:', err);
+}
+
+// Read all files from the chat_wheels directory
+console.log(`\nScanning directory: ${chatWheelsDir}`);
+try {
+  const files = fs.readdirSync(chatWheelsDir);
+  filesToProcess = files
+    .filter(file => file.endsWith('.txt'))
+    .map(file => path.join(chatWheelsDir, file));
+  
+  console.log(`Found ${filesToProcess.length} .txt files to process\n`);
+} catch (err) {
+  console.error('Error reading chat_wheels directory:', err);
+  process.exit(1);
+}
+
+// Helper function to resolve localization strings
+function resolveLocalization(value) {
+  if (typeof value === 'string' && value.startsWith('#')) {
+    const key = value.substring(1); // Remove the '#' prefix
+    return localizationData[key] || value; // Return original if not found
+  }
+  return value;
+}
+
+// Process each file
 filesToProcess.forEach((filePath) => {
-
-  // Extract just the file name (e.g., "stickers_chat_wheel_6.txt") from the path
-  const fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+  // Extract just the file name
+  const fileName = path.basename(filePath);
   
   fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
@@ -31,33 +65,60 @@ filesToProcess.forEach((filePath) => {
     try {
       const parsedData = parseKeyValues(data);
       
+      // Skip if the file doesn't have the expected structure
+      if (!parsedData.chat_wheel?.messages) {
+        console.log(`Skipped ${fileName}: No chat_wheel.messages structure found`);
+        filesProcessed++;
+        checkIfComplete();
+        return;
+      }
+      
       // Store parsed data for this file
       allParsedData[fileName] = parsedData;
       
-      console.log(`Processed ${filePath}: Found ${Object.keys(parsedData.chat_wheel?.messages || {}).length} voice lines`);
+      let voiceLinesFound = 0;
+      let skippedDueToLocalization = 0;
       
-      // Collect voice lines from this file
-      if (parsedData.chat_wheel?.messages) {
-        Object.entries(parsedData.chat_wheel.messages).forEach(([key, value]) => {
+      // Collect voice lines from this file (only entries with sound property)
+      Object.entries(parsedData.chat_wheel.messages).forEach(([key, value]) => {
+        // Only process entries that have a sound property
+        if (value.sound) {
+          const resolvedLabel = resolveLocalization(value.label);
+          const resolvedMessage = resolveLocalization(value.message);
+          
+          // Skip if localization failed (still has '#' prefix)
+          if ((typeof resolvedLabel === 'string' && resolvedLabel.startsWith('#')) ||
+              (typeof resolvedMessage === 'string' && resolvedMessage.startsWith('#'))) {
+            skippedDueToLocalization++;
+            return;
+          }
+          
           allVoiceLines.push({
             id: key,
             message_id: value.message_id,
-            label: value.label,
-            message: value.message,
+            label: resolvedLabel,
+            message: resolvedMessage,
             sound: value.sound,
             source: value.source,
             all_chat: value.all_chat === "1",
             file_source: fileName,
-            category: getVoiceLineCategory(fileName)
+            category: getVoiceLineCategory(fileName, key)
           });
-        });
+          voiceLinesFound++;
+        }
+      });
+      
+      if (skippedDueToLocalization > 0) {
+        console.log(`Processed ${fileName}: Found ${voiceLinesFound} voice lines (skipped ${skippedDueToLocalization} due to missing localization)`);
+      } else {
+        console.log(`Processed ${fileName}: Found ${voiceLinesFound} voice lines`);
       }
       
       filesProcessed++;
       checkIfComplete();
       
     } catch (parseErr) {
-      console.error(`Error parsing KeyValues from ${filePath}:`, parseErr);
+      console.log(`Skipped ${fileName}: Parse error - ${parseErr.message}`);
       filesProcessed++;
       checkIfComplete();
     }
@@ -84,7 +145,13 @@ function checkIfComplete() {
   }
 }
 
-function getVoiceLineCategory(fileName) {
+function getVoiceLineCategory(fileName, entryKey) {
+  // Check if the entry key starts with 'team'
+  if (entryKey && entryKey.toLowerCase().startsWith('team')) {
+    return 'Team';
+  }
+  
+  // Check for predefined categories based on file name
   if (fileName.includes('ti2021_casters_chat_wheel.txt')) {
     return 'TI_2021';
   } else if (fileName.includes('stickers_chat_wheel_6.txt')) {
@@ -96,4 +163,7 @@ function getVoiceLineCategory(fileName) {
   } else if (fileName.includes('stickers_chat_wheel_12.txt')) {
     return 'TI_2025';
   }
+  
+  // Default category for unrecognized files
+  return 'Other';
 }

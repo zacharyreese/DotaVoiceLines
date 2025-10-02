@@ -11,7 +11,8 @@ const categoryTitles = {
     'TI_2022': 'The International 2022',
     'TI_2023': 'The International 2023',
     'TI_2024': 'The International 2024',
-    'TI_2025': 'The International 2025'
+    'TI_2025': 'The International 2025',
+    'Team': 'Team'
 };
 
 // Group voice lines by category
@@ -37,7 +38,7 @@ Object.keys(groupedByCategory).forEach(category => {
 let html = '';
 
 // Sort categories by TI year (newest first or oldest first based on preference)
-const categoryOrder = ['TI_2025', 'TI_2024', 'TI_2023', 'TI_2022', 'TI_2021'];
+const categoryOrder = ['TI_2025', 'TI_2024', 'TI_2023', 'TI_2022', 'TI_2021', 'Team'];
 
 categoryOrder.forEach(category => {
     if (groupedByCategory[category] && groupedByCategory[category].length > 0) {
