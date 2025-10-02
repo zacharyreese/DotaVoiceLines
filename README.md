@@ -16,6 +16,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 - [The International 2022](#the-international-2022)
 - [The International 2021](#the-international-2021)
 - [How To Bind Voice Lines](#how-to-bind-voice-lines)
+- [How I Extracted the Voice Line IDs](#how-i-extracted-voice-line-ids)
 
 # Voice Lines List
 
