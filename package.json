@@ -1,0 +1,23 @@
+{
+  "name": "dotavoicelines",
+  "version": "1.0.0",
+  "description": "![Dota 2 Voice Lines Logo](images/dota_voice_lines_logo.webp)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zacharyreese/DotaVoiceLines.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zacharyreese/DotaVoiceLines/issues"
+  },
+  "homepage": "https://github.com/zacharyreese/DotaVoiceLines#readme",
+  "dependencies": {
+    "franc": "^6.2.0"
+  }
+}

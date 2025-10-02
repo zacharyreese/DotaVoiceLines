@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { parseKeyValues } = require("./file_parser");
+const { franc } = require("franc-min");
 
 // Directory containing chat wheel files
 const chatWheelsDir = '../dota2/scripts/chat_wheels';
@@ -93,6 +94,9 @@ filesToProcess.forEach((filePath) => {
             return;
           }
           
+          // Detect language using franc
+          const detectedLanguage = franc(resolvedMessage || '');
+          
           allVoiceLines.push({
             id: key,
             message_id: value.message_id,
@@ -102,7 +106,8 @@ filesToProcess.forEach((filePath) => {
             source: value.source,
             all_chat: value.all_chat === "1",
             file_source: fileName,
-            category: getVoiceLineCategory(fileName, key)
+            category: getVoiceLineCategory(fileName, key),
+            language: detectedLanguage
           });
           voiceLinesFound++;
         }
