@@ -17,7 +17,7 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
 - [The International 2021](#the-international-2021)
 - [How To Bind Voice Lines](#how-to-bind-voice-lines)
 - [How I Extracted the Voice Line IDs](#how-i-extracted-voice-line-ids)
-- [What's Missing](#whats-left)
+- [What's Missing](#whats-missing)
 
 # Voice Lines List
 
@@ -4988,7 +4988,7 @@ bind "CAPSLOCK" "chatwheel_say 401003"</code></pre>
 5. Compiled all voice lines into a nice table
 
 
-# What's left
+# What's missing
 
 While this list contains most voice lines from the game, there are still a few missing
 - Dota Plus voice lines
