@@ -909,6 +909,71 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
                 <td class="id">401667</td>
             </tr>
             <tr>
+                <td class="voice-line">Ой-ой-ой, халепа…</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">726</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Просто треба краще грати.</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">727</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Ну добийте його! Ну як він живе?!</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">728</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Me ajuda!</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">729</td>
+            </tr>
+            <tr>
+                <td class="voice-line">É, o importante é participar, né?</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">730</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Muito obrigado por voar na Tiny Airlines.</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">731</td>
+            </tr>
+            <tr>
+                <td class="voice-line">It&#039;s over mga Sir</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">732</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Oy Oy Oy Alahoy</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">733</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Nakakatakot ka naman jusko po</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">734</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Well Played!</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">735</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Never Give Up.</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">736</td>
+            </tr>
+            <tr>
+                <td class="voice-line">That was regrettable.</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">737</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Marvel at the spectacle!</td>
+                <td class="creator">TI_2025</td>
+                <td class="id">738</td>
+            </tr>
+            <tr>
                 <td class="voice-line">El diablo</td>
                 <td class="creator">Tio Inka</td>
                 <td class="id">401778</td>
@@ -8244,21 +8309,6 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
                 <td class="id">142767</td>
             </tr>
             <tr>
-                <td class="voice-line">Ignore it, we&#039;re not talking about that game</td>
-                <td class="creator">Tundra Esports</td>
-                <td class="id">142975</td>
-            </tr>
-            <tr>
-                <td class="voice-line">I&#039;m not running, come. Come to my base</td>
-                <td class="creator">Tundra Esports</td>
-                <td class="id">142976</td>
-            </tr>
-            <tr>
-                <td class="voice-line">Lost the game, it&#039;s out of my mind, already</td>
-                <td class="creator">Tundra Esports</td>
-                <td class="id">142977</td>
-            </tr>
-            <tr>
                 <td class="voice-line">Just better</td>
                 <td class="creator">Tundra Esports</td>
                 <td class="id">142855</td>
@@ -8272,6 +8322,21 @@ The issue is that you need the ID of each voice line to bind it to a key, and Va
                 <td class="voice-line">Aaalright</td>
                 <td class="creator">Tundra Esports</td>
                 <td class="id">142857</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Ignore it, we&#039;re not talking about that game</td>
+                <td class="creator">Tundra Esports</td>
+                <td class="id">142975</td>
+            </tr>
+            <tr>
+                <td class="voice-line">I&#039;m not running, come. Come to my base</td>
+                <td class="creator">Tundra Esports</td>
+                <td class="id">142976</td>
+            </tr>
+            <tr>
+                <td class="voice-line">Lost the game, it&#039;s out of my mind, already</td>
+                <td class="creator">Tundra Esports</td>
+                <td class="id">142977</td>
             </tr>
             <tr>
                 <td class="voice-line">I mean, do we really have to?</td>
