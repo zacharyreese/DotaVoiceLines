@@ -4,6 +4,7 @@ const { parseKeyValues } = require("./file_parser");
 
 // Directory containing chat wheel files
 const chatWheelsDir = '../dota2/scripts/chat_wheels';
+const mainChatWheelFile = '../dota2/scripts/chat_wheel.txt';
 const localizationFile = '../dota2/resource/localization/teamfandom_english.txt';
 
 const allVoiceLines = [];
@@ -34,7 +35,10 @@ try {
     .filter(file => file.endsWith('.txt'))
     .map(file => path.join(chatWheelsDir, file));
   
-  console.log(`Found ${filesToProcess.length} .txt files to process\n`);
+  // Add the main chat_wheel.txt file
+  filesToProcess.push(mainChatWheelFile);
+  
+  console.log(`Found ${filesToProcess.length} .txt files to process (including main chat_wheel.txt)\n`);
 } catch (err) {
   console.error('Error reading chat_wheels directory:', err);
   process.exit(1);
@@ -79,10 +83,18 @@ filesToProcess.forEach((filePath) => {
       let voiceLinesFound = 0;
       let skippedDueToLocalization = 0;
       
+      // Check if this is the main chat_wheel.txt file
+      const isMainChatWheel = fileName === 'chat_wheel.txt';
+      
       // Collect voice lines from this file (only entries with sound property)
       Object.entries(parsedData.chat_wheel.messages).forEach(([key, value]) => {
         // Only process entries that have a sound property
         if (value.sound) {
+          // If this is the main chat_wheel.txt, only include entries starting with Community_TI14 or VoiceOfGod
+          if (isMainChatWheel && !key.startsWith('Community_TI14') && !key.startsWith('VoiceOfGod')) {
+            return;
+          }
+          
           const resolvedLabel = resolveLocalization(value.label);
           const resolvedMessage = resolveLocalization(value.message);
           
@@ -99,10 +111,10 @@ filesToProcess.forEach((filePath) => {
             label: resolvedLabel,
             message: resolvedMessage,
             sound: value.sound,
-            source: value.source,
+            source: isMainChatWheel ? 'TI_2025' : value.source,
             all_chat: value.all_chat === "1",
             file_source: fileName,
-            category: getVoiceLineCategory(fileName, key)
+            category: isMainChatWheel ? 'TI_2025' : getVoiceLineCategory(fileName, key)
           });
           voiceLinesFound++;
         }
