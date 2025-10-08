@@ -148,6 +148,16 @@
       
       // Initialize sortable columns
       initializeSorting();
+      
+      // Clear search bar when quick nav buttons are clicked
+      const quickNavLinks = document.querySelectorAll('.toc-links a');
+      quickNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          searchBar.value = '';
+          // Trigger input event to reset the search display
+          searchBar.dispatchEvent(new Event('input'));
+        });
+      });
     }
 
     // Sortable columns functionality
