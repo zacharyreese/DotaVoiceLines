@@ -150,6 +150,10 @@ main {
   padding: 1.5rem;
   margin: 2rem 0;
   border: 1px solid #3C3C3C;
+  position: sticky;
+  top: 72px;
+  z-index: 50;
+  transition: box-shadow 0.3s ease;
 }
 
 .table-of-contents h3 {
@@ -348,6 +352,7 @@ table tbody tr:nth-child(even) {
   .table-of-contents {
     padding: 1rem;
     margin: 1rem 0;
+    position: static;
   }
 
   .table-of-contents h3 {
