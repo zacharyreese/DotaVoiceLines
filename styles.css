@@ -1,7 +1,11 @@
 html {
   background-color: #1B1B1B;
   color: #FFFFFF;
-  scroll-padding-top: 220px; /* Offset for sticky header + table of contents */
+  scroll-padding-top: 90px; /* Offset for sticky header + table of contents */
+}
+
+#the-international-2025 {
+  scroll-margin-top: 220px;
 }
 
 body {
@@ -154,7 +158,15 @@ main {
   position: sticky;
   top: 70px;
   z-index: 50;
-  transition: box-shadow 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.table-of-contents.hidden {
+  transform: translateY(-150%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .table-of-contents h3 {
