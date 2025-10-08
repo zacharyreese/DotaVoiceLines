@@ -221,6 +221,15 @@ main {
   box-shadow: 0 4px 8px rgba(255, 107, 107, 0.2);
 }
 
+/* Desktop/Mobile text toggle */
+.mobile-text {
+  display: none;
+}
+
+.desktop-text {
+  display: inline;
+}
+
 /* Table Styling */
 table {
   width: 100%;
@@ -372,8 +381,30 @@ table tbody tr:nth-child(even) {
     font-size: 1.1rem;
   }
 
+  /* Show mobile text, hide desktop text */
+  .desktop-text {
+    display: none;
+  }
+
+  .mobile-text {
+    display: inline;
+  }
+
   .toc-links {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+  }
+
+  .toc-links li {
+    flex-shrink: 0;
+  }
+
+  .toc-links li a {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
   }
 
   /* Table responsiveness */
