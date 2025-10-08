@@ -1,6 +1,7 @@
 html {
   background-color: #1B1B1B;
   color: #FFFFFF;
+  scroll-padding-top: 220px; /* Offset for sticky header + table of contents */
 }
 
 body {
