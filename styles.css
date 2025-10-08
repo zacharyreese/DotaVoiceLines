@@ -246,6 +246,41 @@ table td {
   width: 33.33%;
 }
 
+/* ID Container with Copy Button */
+.id-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.id-text {
+  flex: 1;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
 table tbody tr:nth-child(odd) {
   background-color: #242424;
 }

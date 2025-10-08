@@ -224,6 +224,32 @@
       // Reattach sorted rows
       rows.forEach(row => tbody.appendChild(row));
     }
+
+    // Copy to clipboard functionality
+    function copyToClipboard(text, button) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Store original emoji
+        const originalEmoji = button.textContent;
+        
+        // Change to confirmation emoji
+        button.textContent = '✅';
+        button.style.opacity = '1';
+        
+        // Change back to original after 1.5 seconds
+        setTimeout(() => {
+          button.textContent = originalEmoji;
+          button.style.opacity = '0.6';
+        }, 1500);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+        // Show error emoji briefly
+        const originalEmoji = button.textContent;
+        button.textContent = '❌';
+        setTimeout(() => {
+          button.textContent = originalEmoji;
+        }, 1500);
+      });
+    }
   </script>
 </body>
 </html>

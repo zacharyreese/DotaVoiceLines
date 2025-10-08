@@ -61,7 +61,12 @@ categoryOrder.forEach(category => {
             html += `            <tr>
                 <td class="voice-line">${escapeHtml(line.message)}</td>
                 <td class="creator">${escapeHtml(line.source || 'Unknown')}</td>
-                <td class="id">${escapeHtml(line.message_id)}</td>
+                <td class="id">
+                    <div class="id-container">
+                        <span class="id-text">${escapeHtml(line.message_id)}</span>
+                        <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(line.message_id)}', this)" title="Copy ID">📋</button>
+                    </div>
+                </td>
             </tr>
 `;
         });
