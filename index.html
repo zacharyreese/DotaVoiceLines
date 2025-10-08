@@ -85,6 +85,7 @@
 
       <div id="other">
         <h3>Other Chat Wheel Resources</h3>
+        <p>Questions? Post questions in my reddit thread <a href="https://www.reddit.com/r/DotA2/comments/1nwal28/ultimate_dota_2_voice_line_list/" target="_blank" style="text-decoration: underline">here</a>!</p>
         <p>Liquidpedia: <a href="https://liquipedia.net/dota2/Chat_Wheel" target="_blank">https://liquipedia.net/dota2/Chat_Wheel</a></p>
       </div>
     </section>
@@ -93,7 +94,6 @@
   <!-- Footer -->
   <footer>
     <img src="images/dota_voice_lines_logo.webp" alt="Dota Voice Lines Logo" class="main-logo" />
-    <p>Questions? Post questions in my reddit thread <a href="https://www.reddit.com/r/DotA2/comments/1nwal28/ultimate_dota_2_voice_line_list/" target="_blank" style="text-decoration: underline">here</a>!</p>
     <p>Thanks to Valve for making the best game in the world ❤️</p>
   </footer>
 
@@ -260,6 +260,42 @@
         }, 1500);
       });
     }
+
+    // Hide/show quick navigation on scroll (desktop only)
+    let lastScrollTop = 0;
+    const quickNav = document.querySelector('.table-of-contents');
+    
+    window.addEventListener('scroll', function() {
+      // Only apply scroll behavior on desktop (screen width > 768px)
+      if (window.innerWidth <= 768) {
+        quickNav.classList.remove('hidden');
+        return;
+      }
+      
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      
+      // Get the position of #the-international-2025 element
+      const ti2025Element = document.getElementById('the-international-2025');
+      const scrollThreshold = ti2025Element ? ti2025Element.offsetTop : 0;
+      
+      // Scrolling down
+      if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+        quickNav.classList.add('hidden');
+      } 
+      // Scrolling up
+      else if (currentScroll < lastScrollTop) {
+        quickNav.classList.remove('hidden');
+      }
+      
+      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+    }, false);
+    
+    // Also check on resize to ensure correct behavior when switching between mobile/desktop
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 768) {
+        quickNav.classList.remove('hidden');
+      }
+    });
   </script>
 </body>
 </html>
