@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { parseKeyValues } = require("./file_parser");
+const { soundToS3Url } = require("./voice_line_s3_sound_link");
 
 // Directory containing chat wheel files
 const chatWheelsDir = '../dota2/scripts/chat_wheels';
@@ -105,7 +106,11 @@ filesToProcess.forEach((filePath) => {
             return;
           }
           
-          allVoiceLines.push({
+          // Generate S3 URL for the sound
+          const soundUrl = soundToS3Url(value.sound);
+          
+          // Create the voice line entry
+          const voiceLineEntry = {
             id: key,
             message_id: value.message_id,
             label: resolvedLabel,
@@ -115,7 +120,14 @@ filesToProcess.forEach((filePath) => {
             all_chat: value.all_chat === "1",
             file_source: fileName,
             category: isMainChatWheel ? 'TI_2025' : getVoiceLineCategory(fileName, key)
-          });
+          };
+          
+          // Add sound_url if it was successfully generated
+          if (soundUrl) {
+            voiceLineEntry.sound_url = soundUrl;
+          }
+          
+          allVoiceLines.push(voiceLineEntry);
           voiceLinesFound++;
         }
       });
@@ -154,6 +166,11 @@ function checkIfComplete() {
     fs.writeFileSync(simplifiedPath, JSON.stringify(simplifiedData, null, 2));
     console.log(`Created simplified version: ${simplifiedPath}`);
     console.log(`Total voice lines found: ${allVoiceLines.length}`);
+    
+    // Count how many entries have sound_url added
+    const entriesWithUrl = allVoiceLines.filter(line => line.sound_url).length;
+    console.log(`Entries with S3 URLs: ${entriesWithUrl}`);
+    console.log(`Entries without S3 URLs: ${allVoiceLines.length - entriesWithUrl}`);
   }
 }
 
