@@ -58,8 +58,14 @@ categoryOrder.forEach(category => {
 `;
         
         groupedByCategory[category].forEach(line => {
+            const soundUrl = line.sound_url || '';
             html += `            <tr>
-                <td class="voice-line">${escapeHtml(line.message)}</td>
+                <td class="voice-line">
+                    <div class="voice-line-container">
+                        <button class="play-btn" onclick="togglePlay('${escapeHtml(line.message_id)}', '${soundUrl}', this)" title="Play" data-playing="false">▶</button>
+                        <span class="voice-line-text">${escapeHtml(line.message)}</span>
+                    </div>
+                </td>
                 <td class="creator">${escapeHtml(line.source || 'Unknown')}</td>
                 <td class="id">
                     <div class="id-container">

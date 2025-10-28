@@ -272,6 +272,48 @@ table td {
   width: 33.33%;
 }
 
+/* Voice Line Container with Play Button */
+.voice-line-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.voice-line-text {
+  flex: 1;
+}
+
+.play-btn {
+  background-color: #FF6B6B;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  padding-left: 2px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.play-btn:hover {
+  background-color: #FF5252;
+  transform: scale(1.1);
+}
+
+.play-btn:active {
+  transform: scale(0.95);
+}
+
+.play-btn[data-playing="true"] {
+  padding-left: 0;
+}
+
 /* ID Container with Copy Button */
 .id-container {
   display: flex;
@@ -422,6 +464,17 @@ table tbody tr:nth-child(even) {
     overflow-wrap: break-word;
   }
 
+  /* Mobile play button adjustments */
+  .play-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+
+  .voice-line-container {
+    gap: 0.5rem;
+  }
+
   /* Adjust column widths for mobile */
   table th:nth-child(1),
   table td:nth-child(1) {
@@ -476,6 +529,17 @@ table tbody tr:nth-child(even) {
   table td {
     padding: 0.3rem 0.2rem;
     font-size: 0.75rem;
+  }
+
+  /* Extra small play button adjustments */
+  .play-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+
+  .voice-line-container {
+    gap: 0.4rem;
   }
 
   /* Even more compact columns on very small screens */

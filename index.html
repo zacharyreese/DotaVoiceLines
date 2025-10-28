@@ -30,6 +30,7 @@
         person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
     })
   </script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" integrity="sha512-xi/RZRIF/S0hJ+yJJYuZ5yk6/8pCiRlEXZzoguSMl+vk2i3m6UjUO/WcZ11blRL/O+rnj94JRGwt/CHbc9+6EA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   
   <!-- CSS -->
   <link rel="stylesheet" href="styles.css" />
@@ -66,6 +67,7 @@
       <div class="main-header">
         <h2>Ultimate Dota 2 Voice Lines List</h2>
         <p>A central source for all Dota 2 voice lines and their IDs</p>
+        
       </div>
       
       <!-- Table of Contents -->
@@ -296,6 +298,86 @@
         quickNav.classList.remove('hidden');
       }
     });
+
+    // Howler.js audio management
+    const audioPlayers = {};
+    let currentlyPlaying = null;
+
+    function togglePlay(id, url, button) {
+      // Stop currently playing audio if different from this one
+      if (currentlyPlaying && currentlyPlaying !== id) {
+        if (audioPlayers[currentlyPlaying]) {
+          audioPlayers[currentlyPlaying].stop();
+          // Reset the button of the previously playing audio
+          const prevButton = document.querySelector(`button[data-playing="true"]`);
+          if (prevButton) {
+            prevButton.setAttribute('data-playing', 'false');
+            prevButton.textContent = '▶';
+            prevButton.title = 'Play';
+          }
+        }
+      }
+
+      // Create Howler instance if it doesn't exist
+      if (!audioPlayers[id]) {
+        audioPlayers[id] = new Howl({
+          src: [url],
+          format: ['wav'],
+          html5: true,
+          preload: false,
+          xhrWithCredentials: false,
+          onend: function() {
+            button.setAttribute('data-playing', 'false');
+            button.textContent = '▶';
+            button.title = 'Play';
+            if (currentlyPlaying === id) {
+              currentlyPlaying = null;
+            }
+          },
+          onloaderror: function(soundId, error) {
+            console.error('Error loading audio for ID:', id, 'Error:', error, 'URL:', url);
+            button.setAttribute('data-playing', 'false');
+            button.textContent = '▶';
+            button.title = 'Play';
+            if (currentlyPlaying === id) {
+              currentlyPlaying = null;
+            }
+          },
+          onplayerror: function(soundId, error) {
+            console.error('Error playing audio for ID:', id, 'Error:', error);
+            // Try to unlock audio context on iOS/mobile
+            audioPlayers[id].once('unlock', function() {
+              audioPlayers[id].play();
+            });
+            button.setAttribute('data-playing', 'false');
+            button.textContent = '▶';
+            button.title = 'Play';
+            if (currentlyPlaying === id) {
+              currentlyPlaying = null;
+            }
+          }
+        });
+      }
+
+      const sound = audioPlayers[id];
+      
+      // Toggle play/pause
+      if (sound.playing()) {
+        sound.pause();
+        button.setAttribute('data-playing', 'false');
+        button.textContent = '▶';
+        button.title = 'Play';
+        if (currentlyPlaying === id) {
+          currentlyPlaying = null;
+        }
+      } else {
+        sound.play();
+        button.setAttribute('data-playing', 'true');
+        button.textContent = '⏸';
+        button.title = 'Pause';
+        currentlyPlaying = id;
+      }
+    }
   </script>
 </body>
 </html>
