@@ -263,17 +263,11 @@
       });
     }
 
-    // Hide/show quick navigation on scroll (desktop only)
+    // Hide/show quick navigation on scroll
     let lastScrollTop = 0;
     const quickNav = document.querySelector('.table-of-contents');
     
     window.addEventListener('scroll', function() {
-      // Only apply scroll behavior on desktop (screen width > 768px)
-      if (window.innerWidth <= 768) {
-        quickNav.classList.remove('hidden');
-        return;
-      }
-      
       const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
       
       // Get the position of #the-international-2025 element
@@ -291,13 +285,6 @@
       
       lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
     }, false);
-    
-    // Also check on resize to ensure correct behavior when switching between mobile/desktop
-    window.addEventListener('resize', function() {
-      if (window.innerWidth <= 768) {
-        quickNav.classList.remove('hidden');
-      }
-    });
 
     // Howler.js audio management
     const audioPlayers = {};
