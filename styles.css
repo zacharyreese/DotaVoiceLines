@@ -412,6 +412,10 @@ table tbody tr:nth-child(even) {
     overflow-x: hidden;
   }
 
+  .main-header {
+    padding-top: 50px;
+  }
+
   /* Table of Contents mobile adjustments */
   .table-of-contents {
     position: fixed;
