@@ -95,6 +95,28 @@ nav h1 {
   gap: 1rem;
 }
 
+.language-select {
+  width: 170px;
+  padding: 0.5rem 0.75rem;
+  background-color: #1B1B1B;
+  border: 2px solid #3C3C3C;
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+#language-select option {
+  background: #1B1B1B;
+  color: #FFFFFF;
+}
+
 #search-bar {
   width: 250px;
   padding: 0.5rem 0.75rem;
@@ -391,10 +413,23 @@ table tbody tr:nth-child(even) {
   .search-container {
     width: 100%;
     gap: 0.75rem;
+    min-width: 0; /* allow children to shrink within the viewport */
+  }
+
+  .language-select {
+    width: 110px;
+    flex: 0 1 110px; /* allow shrink if needed */
+    min-width: 0;
   }
 
   #search-bar {
     flex: 1;
+    width: auto; /* override desktop fixed width */
+    min-width: 0; /* critical: prevent flex overflow on small screens */
+  }
+
+  .github-link {
+    flex: 0 0 auto;
   }
 
   .github-icon {
@@ -511,6 +546,11 @@ table tbody tr:nth-child(even) {
 }
 
 @media (max-width: 480px) {
+  .language-select {
+    width: 96px;
+    flex-basis: 96px;
+  }
+
   /* Extra small screens */
   .nav-logo {
     height: 30px;

@@ -53,6 +53,37 @@
         <li><a href="/how-to-bind">How To Bind Voice Lines</a></li>
       </ul>
       <div class="search-container">
+        <select id="language-select" class="language-select" title="Language">
+          <option value="default">Default</option>
+          <option value="english">English</option>
+          <option value="russian">Русский</option>
+          <option value="schinese">简体中文</option>
+          <option value="tchinese">繁體中文</option>
+          <option value="spanish">Español</option>
+          <option value="latam">Español (Latinoamérica)</option>
+          <option value="portuguese">Português</option>
+          <option value="brazilian">Português (Brasil)</option>
+          <option value="french">Français</option>
+          <option value="german">Deutsch</option>
+          <option value="italian">Italiano</option>
+          <option value="koreana">한국어</option>
+          <option value="japanese">日本語</option>
+          <option value="thai">ไทย</option>
+          <option value="turkish">Türkçe</option>
+          <option value="ukrainian">Українська</option>
+          <option value="vietnamese">Tiếng Việt</option>
+          <option value="polish">Polski</option>
+          <option value="czech">Čeština</option>
+          <option value="dutch">Nederlands</option>
+          <option value="swedish">Svenska</option>
+          <option value="norwegian">Norsk</option>
+          <option value="finnish">Suomi</option>
+          <option value="danish">Dansk</option>
+          <option value="romanian">Română</option>
+          <option value="hungarian">Magyar</option>
+          <option value="bulgarian">Български</option>
+          <option value="greek">Ελληνικά</option>
+        </select>
         <input type="text" id="search-bar" placeholder="Search voice lines, creators, or IDs..." />
         <a href="https://github.com/zacharyreese/DotaVoiceLines" target="_blank" class="github-link" aria-label="View on GitHub">
           <img src="images/GitHub_dark.svg" alt="GitHub" class="github-icon" />
@@ -109,11 +140,249 @@
         
         // Initialize search functionality after content is loaded
         initializeSearch();
+        initializeLanguageSwitcher();
       })
       .catch(error => {
         console.error('Error loading voice lines:', error);
         document.getElementById('voice-lines-list').innerHTML = '<p>Error loading voice lines. Please try again later.</p>';
       });
+
+    // -----------------------
+    // Localization / Language
+    // -----------------------
+
+    const LOCALIZATION_STORAGE_KEY = 'dvl_language';
+    const localizationCache = new Map(); // lang -> { tokens: Record<string,string> }
+
+    function initializeLanguageSwitcher() {
+      const select = document.getElementById('language-select');
+      if (!select) return;
+
+      // Restore persisted language, default to english
+      const saved = localStorage.getItem(LOCALIZATION_STORAGE_KEY);
+      if (saved && Array.from(select.options).some(o => o.value === saved)) {
+        select.value = saved;
+      }
+
+      // Precompute token keys for rows once
+      annotateVoiceLineLocalizationKeys();
+
+      // Apply initial language
+      applyLanguage(select.value);
+
+      select.addEventListener('change', () => {
+        localStorage.setItem(LOCALIZATION_STORAGE_KEY, select.value);
+        applyLanguage(select.value);
+      });
+    }
+
+    async function applyLanguage(lang) {
+      try {
+        if (lang === 'default') {
+          restoreDefaultVoiceLines();
+          const searchBar = document.getElementById('search-bar');
+          if (searchBar) searchBar.dispatchEvent(new Event('input'));
+          return;
+        }
+
+        const tokens = await loadTeamFandomTokens(lang);
+        applyTokensToVoiceLines(tokens);
+
+        // Re-run search filter if user has typed something (or to refresh visibility)
+        const searchBar = document.getElementById('search-bar');
+        if (searchBar) searchBar.dispatchEvent(new Event('input'));
+      } catch (err) {
+        console.error('Failed to apply language:', lang, err);
+      }
+    }
+
+    async function loadTeamFandomTokens(lang) {
+      if (localizationCache.has(lang)) return localizationCache.get(lang).tokens;
+
+      const pathsToTry = [
+        // Primary (deployable) path: committed JSON assets
+        `localization/teamfandom_${lang}.json`,
+        // Optional: also support committed raw txt if you ever prefer it
+        `localization/teamfandom_${lang}.txt`,
+        // Local dev fallback (if you have the dota2 folder locally)
+        `dota2/resource/localization/teamfandom_${lang}.txt`,
+        // user request says teamfandon_*, so try the typo too just in case
+        `dota2/resource/localization/teamfandon_${lang}.txt`
+      ];
+
+      let lastErr = null;
+      for (const p of pathsToTry) {
+        try {
+          const res = await fetch(p);
+          if (!res.ok) throw new Error(`HTTP ${res.status} for ${p}`);
+          let tokens;
+          if (p.endsWith('.json')) {
+            tokens = await res.json();
+          } else {
+            const text = await res.text();
+            tokens = parseValveLocalizationTokens(text);
+          }
+          localizationCache.set(lang, { tokens });
+          return tokens;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error(`Unable to load localization for ${lang}`);
+    }
+
+    function parseValveLocalizationTokens(text) {
+      // Minimal Valve localization parser: extracts key/value pairs inside `"Tokens" { ... }`
+      const lines = text.split(/\r?\n/);
+      const tokens = {};
+
+      let inTokens = false;
+      let depth = 0;
+      let sawTokensKey = false;
+
+      for (let raw of lines) {
+        const line = raw.trim();
+        if (!line || line.startsWith('//')) continue;
+
+        // Detect the Tokens block start
+        if (!inTokens) {
+          if (line === '"Tokens"' || line.startsWith('"Tokens"')) {
+            sawTokensKey = true;
+            continue;
+          }
+          if (sawTokensKey && line === '{') {
+            inTokens = true;
+            depth = 1;
+            sawTokensKey = false;
+            continue;
+          }
+          // reset if something else happens
+          sawTokensKey = false;
+          continue;
+        }
+
+        // Track nested braces inside Tokens
+        if (line === '{') {
+          depth++;
+          continue;
+        }
+        if (line === '}') {
+          depth--;
+          if (depth <= 0) break;
+          continue;
+        }
+
+        // Only read direct key/value pairs at Tokens depth 1
+        if (depth === 1) {
+          const m = line.match(/^"([^"]+)"\s+"([^"]*)"$/);
+          if (m) {
+            const key = m[1];
+            const value = unescapeValveString(m[2]);
+            tokens[key] = value;
+          }
+        }
+      }
+
+      return tokens;
+    }
+
+    function unescapeValveString(s) {
+      // Common escapes used in Valve localization files
+      return String(s)
+        .replace(/\\n/g, '\n')
+        .replace(/\\t/g, '\t')
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, '\\');
+    }
+
+    function annotateVoiceLineLocalizationKeys() {
+      const containers = document.querySelectorAll('#voice-lines-list .voice-line-container');
+      containers.forEach(container => {
+        const textEl = container.querySelector('.voice-line-text');
+        const playBtn = container.querySelector('.play-btn');
+        if (!textEl || !playBtn) return;
+
+        // Capture the original, unlocalized text once so we can restore it
+        if (!textEl.dataset.defaultText) {
+          textEl.dataset.defaultText = textEl.textContent || '';
+        }
+
+        if (textEl.dataset.locKey) return; // already annotated
+
+        const onclick = playBtn.getAttribute('onclick') || '';
+        const m = onclick.match(/togglePlay\('([^']*)',\s*'([^']*)'/);
+        const url = m?.[2];
+        if (!url) return;
+
+        const keys = deriveLocalizationKeysFromSoundUrl(url);
+        if (!keys) return;
+
+        if (keys.primary) textEl.dataset.locKey = keys.primary;
+        if (keys.fallback) textEl.dataset.locKeyFallback = keys.fallback;
+      });
+    }
+
+    function deriveLocalizationKeysFromSoundUrl(url) {
+      // Supported URL patterns:
+      // - .../sounds/talentcontent/season_12/<talentId>_<voiceIdx>.wav
+      // - .../sounds/teamfancontent/season_10/<teamId>/<messageId>.wav
+      let pathname = '';
+      try {
+        pathname = new URL(url).pathname;
+      } catch {
+        // If URL isn't absolute for some reason, bail
+        return null;
+      }
+
+      // Talent: season_X/<talentId>_<voiceIdx>.wav -> DOTA_talent_chatwheel_message_X_<talentId>_voice_<voiceIdx>
+      const talent = pathname.match(/\/sounds\/talentcontent\/season_(\d+)\/(\d+)_([0-9]+)\.wav$/);
+      if (talent) {
+        const season = talent[1];
+        const talentId = talent[2];
+        const voiceIdx = talent[3];
+        return {
+          primary: `DOTA_talent_chatwheel_message_${season}_${talentId}_voice_${voiceIdx}`
+        };
+      }
+
+      // Team: season_X/<teamId>/<messageId>.wav -> dota_chatwheel_teamfandom_X_<teamId>_voiceline_<messageId>_message
+      const team = pathname.match(/\/sounds\/teamfancontent\/season_(\d+)\/(\d+)\/(\d+)\.wav$/);
+      if (team) {
+        const season = team[1];
+        const teamId = team[2];
+        const messageId = team[3];
+        return {
+          primary: `dota_chatwheel_teamfandom_${season}_${teamId}_voiceline_${messageId}_message`,
+          fallback: `dota_chatwheel_teamfandom_${season}_${teamId}_voiceline_${messageId}_label`
+        };
+      }
+
+      return null;
+    }
+
+    function applyTokensToVoiceLines(tokens) {
+      const textEls = document.querySelectorAll('#voice-lines-list .voice-line-text');
+      textEls.forEach(el => {
+        const key = el.dataset.locKey;
+        const fallback = el.dataset.locKeyFallback;
+
+        const next =
+          (key && tokens[key]) ||
+          (fallback && tokens[fallback]) ||
+          null;
+
+        if (next != null) el.textContent = next;
+      });
+    }
+
+    function restoreDefaultVoiceLines() {
+      const textEls = document.querySelectorAll('#voice-lines-list .voice-line-text');
+      textEls.forEach(el => {
+        if (typeof el.dataset.defaultText === 'string') {
+          el.textContent = el.dataset.defaultText;
+        }
+      });
+    }
 
     // Search functionality
     function initializeSearch() {
