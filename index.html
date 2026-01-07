@@ -153,6 +153,18 @@
 
     const LOCALIZATION_STORAGE_KEY = 'dvl_language';
     const localizationCache = new Map(); // lang -> { tokens: Record<string,string> }
+    
+    // All available languages for cross-language search
+    const ALL_LANGUAGES = [
+      'english', 'russian', 'schinese', 'tchinese', 'spanish', 'latam', 
+      'portuguese', 'brazilian', 'french', 'german', 'italian', 'koreana', 
+      'japanese', 'thai', 'turkish', 'ukrainian', 'vietnamese', 'polish', 
+      'czech', 'dutch', 'swedish', 'norwegian', 'finnish', 'danish', 
+      'romanian', 'hungarian', 'bulgarian', 'greek'
+    ];
+    
+    // Store all translations for each voice line for cross-language search
+    const allTranslationsMap = new Map(); // locKey -> { lang: translation, ... }
 
     function initializeLanguageSwitcher() {
       const select = document.getElementById('language-select');
@@ -169,11 +181,55 @@
 
       // Apply initial language
       applyLanguage(select.value);
+      
+      // Preload all language translations for cross-language search
+      preloadAllTranslations();
 
       select.addEventListener('change', () => {
         localStorage.setItem(LOCALIZATION_STORAGE_KEY, select.value);
         applyLanguage(select.value);
       });
+    }
+    
+    async function preloadAllTranslations() {
+      // Load all languages in parallel for cross-language search
+      const loadPromises = ALL_LANGUAGES.map(async (lang) => {
+        try {
+          const tokens = await loadTeamFandomTokens(lang);
+          return { lang, tokens };
+        } catch (e) {
+          console.warn(`Failed to load ${lang} localization:`, e);
+          return { lang, tokens: {} };
+        }
+      });
+      
+      const results = await Promise.all(loadPromises);
+      
+      // Build the allTranslationsMap keyed by locKey
+      const textEls = document.querySelectorAll('#voice-lines-list .voice-line-text');
+      textEls.forEach(el => {
+        const locKey = el.dataset.locKey;
+        const fallbackKey = el.dataset.locKeyFallback;
+        if (!locKey) return;
+        
+        const translations = {};
+        
+        // Add the default text as a searchable option
+        if (el.dataset.defaultText) {
+          translations['default'] = el.dataset.defaultText.toLowerCase();
+        }
+        
+        results.forEach(({ lang, tokens }) => {
+          const text = tokens[locKey] || (fallbackKey && tokens[fallbackKey]);
+          if (text) {
+            translations[lang] = text.toLowerCase();
+          }
+        });
+        
+        allTranslationsMap.set(locKey, translations);
+      });
+      
+      console.log(`Preloaded ${ALL_LANGUAGES.length} languages for cross-language search`);
     }
 
     async function applyLanguage(lang) {
@@ -397,11 +453,25 @@
           let visibleRowCount = 0;
           
           rows.forEach(row => {
-            const voiceLine = row.querySelector('.voice-line')?.textContent.toLowerCase() || '';
+            const voiceLineEl = row.querySelector('.voice-line');
+            const voiceLineTextEl = voiceLineEl?.querySelector('.voice-line-text');
+            const voiceLine = voiceLineEl?.textContent.toLowerCase() || '';
             const creator = row.querySelector('.creator')?.textContent.toLowerCase() || '';
             const id = row.querySelector('.id')?.textContent.toLowerCase() || '';
             
-            if (voiceLine.includes(searchTerm) || creator.includes(searchTerm) || id.includes(searchTerm)) {
+            // Check if search term matches current visible text
+            let matches = voiceLine.includes(searchTerm) || creator.includes(searchTerm) || id.includes(searchTerm);
+            
+            // If not matched, check all language translations
+            if (!matches && voiceLineTextEl) {
+              const locKey = voiceLineTextEl.dataset.locKey;
+              if (locKey && allTranslationsMap.has(locKey)) {
+                const translations = allTranslationsMap.get(locKey);
+                matches = Object.values(translations).some(text => text.includes(searchTerm));
+              }
+            }
+            
+            if (matches) {
               row.style.display = '';
               visibleRowCount++;
             } else {
