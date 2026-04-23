@@ -713,6 +713,7 @@
       if (!audioPlayers[id]) {
         audioPlayers[id] = new Howl({
           src: [url],
+          volume: 0.5,
           format: ['wav'],
           html5: true,
           preload: false,
