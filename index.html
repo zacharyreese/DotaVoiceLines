@@ -46,44 +46,53 @@
         <a href="/">
           <img src="images/loud_voice.png" alt="Loud Voice Icon" class="nav-logo" />
         </a>
-        <h1>Ultimate Dota 2 Voice Lines List</h1>
+        <h1>Ultimate Dota 2 Voice Lines</h1>
       </div>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
         <li><a href="/how-to-bind">How To Bind Voice Lines</a></li>
       </ul>
       <div class="search-container">
-        <select id="language-select" class="language-select" title="Language">
-          <option value="default">Default</option>
-          <option value="english">English</option>
-          <option value="russian">Русский</option>
-          <option value="schinese">简体中文</option>
-          <option value="tchinese">繁體中文</option>
-          <option value="spanish">Español</option>
-          <option value="latam">Español (Latinoamérica)</option>
-          <option value="portuguese">Português</option>
-          <option value="brazilian">Português (Brasil)</option>
-          <option value="french">Français</option>
-          <option value="german">Deutsch</option>
-          <option value="italian">Italiano</option>
-          <option value="koreana">한국어</option>
-          <option value="japanese">日本語</option>
-          <option value="thai">ไทย</option>
-          <option value="turkish">Türkçe</option>
-          <option value="ukrainian">Українська</option>
-          <option value="vietnamese">Tiếng Việt</option>
-          <option value="polish">Polski</option>
-          <option value="czech">Čeština</option>
-          <option value="dutch">Nederlands</option>
-          <option value="swedish">Svenska</option>
-          <option value="norwegian">Norsk</option>
-          <option value="finnish">Suomi</option>
-          <option value="danish">Dansk</option>
-          <option value="romanian">Română</option>
-          <option value="hungarian">Magyar</option>
-          <option value="bulgarian">Български</option>
-          <option value="greek">Ελληνικά</option>
-        </select>
+        <div class="language-dropdown">
+          <button id="language-dropdown-btn" class="language-dropdown-btn" title="Language">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="language-icon">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </button>
+          <div id="language-dropdown-content" class="language-dropdown-content">
+            <button data-value="default">Default</button>
+            <button data-value="english">English</button>
+            <button data-value="russian">Русский</button>
+            <button data-value="schinese">简体中文</button>
+            <button data-value="tchinese">繁體中文</button>
+            <button data-value="spanish">Español</button>
+            <button data-value="latam">Español (Latinoamérica)</button>
+            <button data-value="portuguese">Português</button>
+            <button data-value="brazilian">Português (Brasil)</button>
+            <button data-value="french">Français</button>
+            <button data-value="german">Deutsch</button>
+            <button data-value="italian">Italiano</button>
+            <button data-value="koreana">한국어</button>
+            <button data-value="japanese">日本語</button>
+            <button data-value="thai">ไทย</button>
+            <button data-value="turkish">Türkçe</button>
+            <button data-value="ukrainian">Українська</button>
+            <button data-value="vietnamese">Tiếng Việt</button>
+            <button data-value="polish">Polski</button>
+            <button data-value="czech">Čeština</button>
+            <button data-value="dutch">Nederlands</button>
+            <button data-value="swedish">Svenska</button>
+            <button data-value="norwegian">Norsk</button>
+            <button data-value="finnish">Suomi</button>
+            <button data-value="danish">Dansk</button>
+            <button data-value="romanian">Română</button>
+            <button data-value="hungarian">Magyar</button>
+            <button data-value="bulgarian">Български</button>
+            <button data-value="greek">Ελληνικά</button>
+          </div>
+        </div>
         <input type="text" id="search-bar" placeholder="Search voice lines, creators, or IDs..." />
         <a href="https://github.com/zacharyreese/DotaVoiceLines" target="_blank" class="github-link" aria-label="View on GitHub">
           <img src="images/GitHub_dark.svg" alt="GitHub" class="github-icon" />
@@ -167,27 +176,59 @@
     const allTranslationsMap = new Map(); // locKey -> { lang: translation, ... }
 
     function initializeLanguageSwitcher() {
-      const select = document.getElementById('language-select');
-      if (!select) return;
+      const dropdownBtn = document.getElementById('language-dropdown-btn');
+      const dropdownContent = document.getElementById('language-dropdown-content');
+      const languageButtons = dropdownContent.querySelectorAll('button');
+      
+      if (!dropdownBtn || !dropdownContent) return;
 
-      // Restore persisted language, default to english
-      const saved = localStorage.getItem(LOCALIZATION_STORAGE_KEY);
-      if (saved && Array.from(select.options).some(o => o.value === saved)) {
-        select.value = saved;
+      // Restore persisted language, default to default
+      const saved = localStorage.getItem(LOCALIZATION_STORAGE_KEY) || 'default';
+      
+      function updateActiveButton(value) {
+        languageButtons.forEach(btn => {
+          if (btn.dataset.value === value) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
       }
+
+      // Initial state
+      updateActiveButton(saved);
 
       // Precompute token keys for rows once
       annotateVoiceLineLocalizationKeys();
 
       // Apply initial language
-      applyLanguage(select.value);
+      applyLanguage(saved);
       
       // Preload all language translations for cross-language search
       preloadAllTranslations();
 
-      select.addEventListener('change', () => {
-        localStorage.setItem(LOCALIZATION_STORAGE_KEY, select.value);
-        applyLanguage(select.value);
+      // Toggle dropdown
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownContent.classList.toggle('show');
+      });
+
+      // Handle language selection
+      languageButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const value = btn.dataset.value;
+          localStorage.setItem(LOCALIZATION_STORAGE_KEY, value);
+          applyLanguage(value);
+          updateActiveButton(value);
+          dropdownContent.classList.remove('show');
+        });
+      });
+
+      // Close dropdown when clicking outside
+      window.addEventListener('click', () => {
+        if (dropdownContent.classList.contains('show')) {
+          dropdownContent.classList.remove('show');
+        }
       });
     }
     

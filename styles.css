@@ -95,26 +95,95 @@ nav h1 {
   gap: 1rem;
 }
 
-.language-select {
-  width: 170px;
-  padding: 0.5rem 0.75rem;
-  background-color: #1B1B1B;
+/* Language Dropdown */
+.language-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.language-dropdown-btn {
+  background: #1B1B1B;
   border: 2px solid #3C3C3C;
   border-radius: 6px;
   color: #FFFFFF;
-  font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  width: 42px;
+  height: 42px;
 }
 
-.language-select:focus {
+.language-icon {
+  width: 20px;
+  height: 20px;
+  stroke: #FFFFFF;
+}
+
+.language-dropdown-btn:hover .language-icon {
+  stroke: #FF6B6B;
+}
+
+.language-dropdown-btn:hover {
+  border-color: #FF6B6B;
+  background-color: #2C2C2C;
+}
+
+.language-dropdown-btn:focus {
   outline: none;
   border-color: #FF6B6B;
   box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
 }
 
-#language-select option {
-  background: #1B1B1B;
+.language-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background-color: #2C2C2C;
+  min-width: 180px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  border: 1px solid #3C3C3C;
+  border-radius: 6px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+}
+
+.language-dropdown-content.show {
+  display: block;
+}
+
+.language-dropdown-content button {
   color: #FFFFFF;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #3C3C3C;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.language-dropdown-content button:last-child {
+  border-bottom: none;
+}
+
+.language-dropdown-content button:hover {
+  background-color: #3C3C3C;
+  color: #FF6B6B;
+}
+
+.language-dropdown-content button.active {
+  background-color: #3C3C3C;
+  color: #FF6B6B;
+  font-weight: bold;
 }
 
 #search-bar {
@@ -416,10 +485,14 @@ table tbody tr:nth-child(even) {
     min-width: 0; /* allow children to shrink within the viewport */
   }
 
-  .language-select {
-    width: 110px;
-    flex: 0 1 110px; /* allow shrink if needed */
-    min-width: 0;
+  .language-dropdown-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .language-icon {
+    width: 18px;
+    height: 18px;
   }
 
   #search-bar {
@@ -546,9 +619,14 @@ table tbody tr:nth-child(even) {
 }
 
 @media (max-width: 480px) {
-  .language-select {
-    width: 96px;
-    flex-basis: 96px;
+  .language-dropdown-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .language-icon {
+    width: 16px;
+    height: 16px;
   }
 
   /* Extra small screens */
