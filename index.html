@@ -49,10 +49,26 @@
         <h1>Ultimate Dota 2 Voice Lines</h1>
       </div>
       <ul class="nav-links">
-        <li><a href="/">Home</a></li>
+        <li><a href="/" class="active">Home</a></li>
         <li><a href="/how-to-bind">How To Bind Voice Lines</a></li>
       </ul>
       <div class="search-container">
+        <div class="quick-nav-dropdown">
+          <button id="quick-nav-dropdown-btn" class="quick-nav-dropdown-btn" title="Quick Navigation">
+            Quick Nav
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="dropdown-arrow">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div id="quick-nav-dropdown-content" class="quick-nav-dropdown-content">
+            <a href="#the-international-2025">The International 2025</a>
+            <a href="#the-international-2024">The International 2024</a>
+            <a href="#the-international-2023">The International 2023</a>
+            <a href="#the-international-2022">The International 2022</a>
+            <a href="#the-international-2021">The International 2021</a>
+            <a href="#team">Team Voice Lines</a>
+          </div>
+        </div>
         <div class="language-dropdown">
           <button id="language-dropdown-btn" class="language-dropdown-btn" title="Language">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="language-icon">
@@ -108,19 +124,6 @@
         <h2>Ultimate Dota 2 Voice Lines List</h2>
         <p>A central source for all Dota 2 voice lines and their IDs</p>
         
-      </div>
-      
-      <!-- Table of Contents -->
-      <div class="table-of-contents">
-        <h3>Quick Navigation</h3>
-        <ul class="toc-links">
-          <li><a href="#the-international-2025"><span class="desktop-text">The International 2025</span><span class="mobile-text">TI 2025</span></a></li>
-          <li><a href="#the-international-2024"><span class="desktop-text">The International 2024</span><span class="mobile-text">TI 2024</span></a></li>
-          <li><a href="#the-international-2023"><span class="desktop-text">The International 2023</span><span class="mobile-text">TI 2023</span></a></li>
-          <li><a href="#the-international-2022"><span class="desktop-text">The International 2022</span><span class="mobile-text">TI 2022</span></a></li>
-          <li><a href="#the-international-2021"><span class="desktop-text">The International 2021</span><span class="mobile-text">TI 2021</span></a></li>
-          <li><a href="#team"><span class="desktop-text">Team Voice Lines</span><span class="mobile-text">Team</span></a></li>
-        </ul>
       </div>
       
       <div id="voice-lines-list"></div>
@@ -180,7 +183,25 @@
       const dropdownContent = document.getElementById('language-dropdown-content');
       const languageButtons = dropdownContent.querySelectorAll('button');
       
+      const quickNavBtn = document.getElementById('quick-nav-dropdown-btn');
+      const quickNavContent = document.getElementById('quick-nav-dropdown-content');
+      
       if (!dropdownBtn || !dropdownContent) return;
+
+      // Quick Navigation Dropdown
+      if (quickNavBtn && quickNavContent) {
+        quickNavBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          quickNavContent.classList.toggle('show');
+          dropdownContent.classList.remove('show');
+        });
+
+        quickNavContent.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            quickNavContent.classList.remove('show');
+          });
+        });
+      }
 
       // Restore persisted language, default to default
       const saved = localStorage.getItem(LOCALIZATION_STORAGE_KEY) || 'default';
@@ -211,6 +232,7 @@
       dropdownBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         dropdownContent.classList.toggle('show');
+        if (quickNavContent) quickNavContent.classList.remove('show');
       });
 
       // Handle language selection
@@ -228,6 +250,9 @@
       window.addEventListener('click', () => {
         if (dropdownContent.classList.contains('show')) {
           dropdownContent.classList.remove('show');
+        }
+        if (quickNavContent && quickNavContent.classList.contains('show')) {
+          quickNavContent.classList.remove('show');
         }
       });
     }
@@ -532,7 +557,7 @@
       initializeSorting();
       
       // Clear search bar when quick nav buttons are clicked
-      const quickNavLinks = document.querySelectorAll('.toc-links a');
+      const quickNavLinks = document.querySelectorAll('.quick-nav-dropdown-content a');
       quickNavLinks.forEach(link => {
         link.addEventListener('click', function() {
           searchBar.value = '';
@@ -643,9 +668,8 @@
       });
     }
 
-    // Hide/show quick navigation on scroll
+    // JavaScript logic for Quick Navigation scroll behavior removed as it's now a dropdown
     let lastScrollTop = 0;
-    const quickNav = document.querySelector('.table-of-contents');
     
     window.addEventListener('scroll', function() {
       const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
@@ -656,11 +680,11 @@
       
       // Scrolling down
       if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
-        quickNav.classList.add('hidden');
+        // Scroll behavior removed
       } 
       // Scrolling up
       else if (currentScroll < lastScrollTop) {
-        quickNav.classList.remove('hidden');
+        // Scroll behavior removed
       }
       
       lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
