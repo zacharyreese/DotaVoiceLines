@@ -437,12 +437,21 @@ table td {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: nowrap;
   gap: 0.5rem;
 }
 
 .id-text {
-  flex: 1;
-  min-width: 0;
+  flex: 0 1 auto;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+table td.id {
+  overflow-wrap: normal;
+  word-wrap: normal;
+  word-break: normal;
 }
 
 .copy-btn {
@@ -752,20 +761,24 @@ table tbody tr:nth-child(even) {
     gap: 0.5rem;
   }
 
+  .id-container {
+    gap: 0.25rem;
+  }
+
   /* Adjust column widths for mobile */
   table th:nth-child(1),
   table td:nth-child(1) {
-    width: 50%;
+    width: 48%;
   }
 
   table th:nth-child(2),
   table td:nth-child(2) {
-    width: 30%;
+    width: 27%;
   }
 
   table th:nth-child(3),
   table td:nth-child(3) {
-    width: 20%;
+    width: 25%;
   }
 }
 
@@ -848,19 +861,23 @@ table tbody tr:nth-child(even) {
     gap: 0.4rem;
   }
 
+  .id-container {
+    gap: 0.2rem;
+  }
+
   /* Even more compact columns on very small screens */
   table th:nth-child(1),
   table td:nth-child(1) {
-    width: 45%;
+    width: 44%;
   }
 
   table th:nth-child(2),
   table td:nth-child(2) {
-    width: 35%;
+    width: 28%;
   }
 
   table th:nth-child(3),
   table td:nth-child(3) {
-    width: 20%;
+    width: 28%;
   }
 }
