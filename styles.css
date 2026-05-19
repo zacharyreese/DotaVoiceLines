@@ -292,6 +292,37 @@ main {
 
 .guide-content {
   padding-top: 1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.guide-content pre {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #2C2C2C;
+  border: 1px solid #3C3C3C;
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.guide-content pre code {
+  display: block;
+  white-space: pre;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.guide-content :not(pre) > code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.guide-content h4 {
+  overflow-wrap: anywhere;
 }
 
 .guide-image {
@@ -674,6 +705,10 @@ table tbody tr:nth-child(even) {
   main {
     padding: 0.5rem;
     overflow-x: hidden;
+  }
+
+  .guide-content pre code {
+    font-size: 0.8rem;
   }
 
   .main-header {
