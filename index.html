@@ -668,28 +668,6 @@
       });
     }
 
-    // JavaScript logic for Quick Navigation scroll behavior removed as it's now a dropdown
-    let lastScrollTop = 0;
-    
-    window.addEventListener('scroll', function() {
-      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-      
-      // Get the position of #the-international-2025 element
-      const ti2025Element = document.getElementById('the-international-2025');
-      const scrollThreshold = ti2025Element ? ti2025Element.offsetTop : 0;
-      
-      // Scrolling down
-      if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
-        // Scroll behavior removed
-      } 
-      // Scrolling up
-      else if (currentScroll < lastScrollTop) {
-        // Scroll behavior removed
-      }
-      
-      lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
-    }, false);
-
     // Howler.js audio management
     const audioPlayers = {};
     let currentlyPlaying = null;
@@ -771,5 +749,6 @@
       }
     }
   </script>
+  <script src="nav-scroll.js"></script>
 </body>
 </html>
