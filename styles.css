@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html {
   background-color: #1B1B1B;
   color: #FFFFFF;
@@ -20,6 +26,16 @@ body {
 
 footer {
   text-align: center;
+  padding: 1rem 2rem;
+  overflow-x: hidden;
+}
+
+.main-logo {
+  display: block;
+  max-width: min(720px, 100%);
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
 }
 
 a {
@@ -292,10 +308,17 @@ main {
 /* .toc-links and related styles removed */
 
 /* Table Styling */
+#voice-lines-list {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
+  table-layout: fixed;
 }
 
 table th,
@@ -303,6 +326,8 @@ table td {
   border: 1px solid #3C3C3C;
   padding: 0.75rem;
   text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 table th {
@@ -342,6 +367,7 @@ table td {
 
 .voice-line-text {
   flex: 1;
+  min-width: 0;
 }
 
 .play-btn {
@@ -385,6 +411,7 @@ table td {
 
 .id-text {
   flex: 1;
+  min-width: 0;
 }
 
 .copy-btn {
@@ -418,8 +445,33 @@ table tbody tr:nth-child(even) {
   background-color: #1B1B1B;
 }
 
-/* Compact desktop navigation (narrow viewports above mobile) */
+/* Compact desktop (narrow viewports above mobile) */
 @media (max-width: 1200px) and (min-width: 769px) {
+  main {
+    padding: 1.5rem 1rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  table th:nth-child(1),
+  table td:nth-child(1) {
+    width: 50%;
+  }
+
+  table th:nth-child(2),
+  table td:nth-child(2) {
+    width: 28%;
+  }
+
+  table th:nth-child(3),
+  table td:nth-child(3) {
+    width: 22%;
+  }
+
   nav {
     padding: 0.75rem 1.25rem;
   }
@@ -463,6 +515,14 @@ table tbody tr:nth-child(even) {
   .quick-nav-dropdown-btn {
     padding: 0 0.6rem;
     font-size: 0.9rem;
+  }
+
+  footer {
+    padding: 1rem;
+  }
+
+  .main-logo {
+    max-width: min(520px, 90%);
   }
 }
 
@@ -516,15 +576,14 @@ table tbody tr:nth-child(even) {
     width: 28px;
     height: 28px;
   }
+
+  .main-logo {
+    max-width: min(400px, 95%);
+  }
 }
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
-  /* Fix box-sizing for proper width calculation */
-  * {
-    box-sizing: border-box;
-  }
-
   /* Navigation adjustments */
   nav {
     flex-direction: column;
@@ -603,8 +662,12 @@ table tbody tr:nth-child(even) {
     height: 28px;
   }
 
+  footer {
+    padding: 0.75rem 0.5rem;
+  }
+
   .main-logo {
-    width: 100%;
+    max-width: 100%;
   }
 
   /* Main content adjustments */
