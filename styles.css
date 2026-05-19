@@ -75,7 +75,7 @@ nav h1 {
 .nav-links {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -416,6 +416,106 @@ table tbody tr:nth-child(odd) {
 
 table tbody tr:nth-child(even) {
   background-color: #1B1B1B;
+}
+
+/* Compact desktop navigation (narrow viewports above mobile) */
+@media (max-width: 1200px) and (min-width: 769px) {
+  nav {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .nav-left {
+    gap: 0.75rem;
+  }
+
+  nav h1 {
+    font-size: 1.25rem;
+  }
+
+  .nav-logo {
+    height: 36px;
+  }
+
+  .nav-links {
+    gap: 0.75rem;
+  }
+
+  .nav-links li a {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.95rem;
+  }
+
+  .search-container {
+    gap: 0.75rem;
+  }
+
+  #search-bar {
+    width: 180px;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.85rem;
+  }
+
+  .language-dropdown-btn,
+  .quick-nav-dropdown-btn {
+    height: 38px;
+  }
+
+  .quick-nav-dropdown-btn {
+    padding: 0 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 992px) and (min-width: 769px) {
+  nav {
+    padding: 0.75rem 1rem;
+  }
+
+  nav h1 {
+    font-size: 1.1rem;
+  }
+
+  .nav-logo {
+    height: 32px;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+
+  .nav-links li a {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .search-container {
+    gap: 0.5rem;
+  }
+
+  #search-bar {
+    width: 140px;
+    padding: 0.4rem 0.55rem;
+    font-size: 0.8rem;
+  }
+
+  .language-dropdown-btn,
+  .quick-nav-dropdown-btn {
+    height: 36px;
+  }
+
+  .language-dropdown-btn {
+    width: 36px;
+  }
+
+  .quick-nav-dropdown-btn {
+    padding: 0 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .github-icon {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 /* Mobile Responsive Styles */
