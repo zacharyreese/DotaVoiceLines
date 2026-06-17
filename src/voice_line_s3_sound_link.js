@@ -1,15 +1,15 @@
 // Base S3 URL
-const S3_BASE_URL = 'https://s3.supernovasolutions.dev/dota2voicelines/sounds';
+const S3_BASE_URL = 'https://s3.dota2voicelines.com/sounds';
 
 /**
  * Converts a sound string to an S3 URL
  * Examples: 
- * - "talent.season10.89511038.1" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/teamfancontent/ti_2023/89511038_1.wav"
- * - "talent.season12.96803083.1" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/talentcontent/season_12/96803083_1.wav"
- * - "teamfandom.ti2021.aui_2000" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/teamfancontent/ti_2021/aui.wav"
- * - "stickers.season6.37147003" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/teamfancontent/ti_2022/37147003.wav"
- * - "teamfandom.12.wxc.3" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/talentcontent/season_12/community_broadcasts/wxc_3.wav"
- * - "teamfandom.7.8261554.141835" -> "https://s3.supernovasolutions.dev/dota2voicelines/sounds/teamfancontent/season_7/8261554/141835.wav"
+ * - "talent.season10.89511038.1" -> "https://s3.dota2voicelines.com/sounds/teamfancontent/ti_2023/89511038_1.wav"
+ * - "talent.season12.96803083.1" -> "https://s3.dota2voicelines.com/sounds/talentcontent/season_12/96803083_1.wav"
+ * - "teamfandom.ti2021.aui_2000" -> "https://s3.dota2voicelines.com/sounds/teamfancontent/ti_2021/aui.wav"
+ * - "stickers.season6.37147003" -> "https://s3.dota2voicelines.com/sounds/teamfancontent/ti_2022/37147003.wav"
+ * - "teamfandom.12.wxc.3" -> "https://s3.dota2voicelines.com/sounds/talentcontent/season_12/community_broadcasts/wxc_3.wav"
+ * - "teamfandom.7.8261554.141835" -> "https://s3.dota2voicelines.com/sounds/teamfancontent/season_7/8261554/141835.wav"
  */
 function soundToS3Url(sound) {
   const parts = sound.split('.');
