@@ -7,6 +7,8 @@ const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 
 // Category mapping
 const categoryTitles = {
+    'TI_2026': 'The International 2026',
+    'Dark_Carnival': 'Dark Carnival',
     'TI_2021': 'The International 2021',
     'TI_2022': 'The International 2022',
     'TI_2023': 'The International 2023',
@@ -38,7 +40,16 @@ Object.keys(groupedByCategory).forEach(category => {
 let html = '';
 
 // Sort categories by TI year (newest first or oldest first based on preference)
-const categoryOrder = ['TI_2025', 'TI_2024', 'TI_2023', 'TI_2022', 'TI_2021', 'Team'];
+const categoryOrder = [
+    'TI_2026',
+    'Dark_Carnival',
+    'TI_2025',
+    'TI_2024',
+    'TI_2023',
+    'TI_2022',
+    'TI_2021',
+    'Team'
+];
 
 categoryOrder.forEach(category => {
     if (groupedByCategory[category] && groupedByCategory[category].length > 0) {
@@ -59,11 +70,17 @@ categoryOrder.forEach(category => {
         
         groupedByCategory[category].forEach(line => {
             const soundUrl = line.sound_url || '';
+            const localizationKey = line.localization_key
+                ? ` data-loc-key="${escapeHtml(line.localization_key)}"`
+                : '';
+            const localizationFallbackKey = line.localization_fallback_key
+                ? ` data-loc-key-fallback="${escapeHtml(line.localization_fallback_key)}"`
+                : '';
             html += `            <tr>
                 <td class="voice-line">
                     <div class="voice-line-container">
                         <button class="play-btn" onclick="togglePlay('${escapeHtml(line.message_id)}', '${soundUrl}', this)" title="Play" data-playing="false">▶</button>
-                        <span class="voice-line-text">${escapeHtml(line.message)}</span>
+                        <span class="voice-line-text"${localizationKey}${localizationFallbackKey}>${escapeHtml(line.message)}</span>
                     </div>
                 </td>
                 <td class="creator">${escapeHtml(line.source || 'Unknown')}</td>

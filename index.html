@@ -61,6 +61,8 @@
             </svg>
           </button>
           <div id="quick-nav-dropdown-content" class="quick-nav-dropdown-content">
+            <a href="#the-international-2026">The International 2026</a>
+            <a href="#dark-carnival">Dark Carnival</a>
             <a href="#the-international-2025">The International 2025</a>
             <a href="#the-international-2024">The International 2024</a>
             <a href="#the-international-2023">The International 2023</a>
@@ -261,7 +263,7 @@
       // Load all languages in parallel for cross-language search
       const loadPromises = ALL_LANGUAGES.map(async (lang) => {
         try {
-          const tokens = await loadTeamFandomTokens(lang);
+          const tokens = await loadVoiceLineTokens(lang);
           return { lang, tokens };
         } catch (e) {
           console.warn(`Failed to load ${lang} localization:`, e);
@@ -307,7 +309,7 @@
           return;
         }
 
-        const tokens = await loadTeamFandomTokens(lang);
+        const tokens = await loadVoiceLineTokens(lang);
         applyTokensToVoiceLines(tokens);
 
         // Re-run search filter if user has typed something (or to refresh visibility)
@@ -318,18 +320,23 @@
       }
     }
 
-    async function loadTeamFandomTokens(lang) {
+    async function loadVoiceLineTokens(lang) {
       if (localizationCache.has(lang)) return localizationCache.get(lang).tokens;
 
+      const [teamFandomTokens, dotaTokens] = await Promise.all([
+        loadLocalizationFamily('teamfandom', lang, true),
+        loadLocalizationFamily('dota', lang, false)
+      ]);
+      const tokens = { ...dotaTokens, ...teamFandomTokens };
+      localizationCache.set(lang, { tokens });
+      return tokens;
+    }
+
+    async function loadLocalizationFamily(family, lang, required) {
       const pathsToTry = [
-        // Primary (deployable) path: committed JSON assets
-        `localization/teamfandom_${lang}.json`,
-        // Optional: also support committed raw txt if you ever prefer it
-        `localization/teamfandom_${lang}.txt`,
-        // Local dev fallback (if you have the dota2 folder locally)
-        `dota2/resource/localization/teamfandom_${lang}.txt`,
-        // user request says teamfandon_*, so try the typo too just in case
-        `dota2/resource/localization/teamfandon_${lang}.txt`
+        `localization/${family}_${lang}.json`,
+        `localization/${family}_${lang}.txt`,
+        `dota2/resource/localization/${family}_${lang}.txt`
       ];
 
       let lastErr = null;
@@ -344,13 +351,15 @@
             const text = await res.text();
             tokens = parseValveLocalizationTokens(text);
           }
-          localizationCache.set(lang, { tokens });
           return tokens;
         } catch (e) {
           lastErr = e;
         }
       }
-      throw lastErr || new Error(`Unable to load localization for ${lang}`);
+      if (required) {
+        throw lastErr || new Error(`Unable to load ${family} localization for ${lang}`);
+      }
+      return {};
     }
 
     function parseValveLocalizationTokens(text) {
@@ -457,7 +466,7 @@
       }
 
       // Talent: season_X/<talentId>_<voiceIdx>.wav -> DOTA_talent_chatwheel_message_X_<talentId>_voice_<voiceIdx>
-      const talent = pathname.match(/\/sounds\/talentcontent\/season_(\d+)\/(\d+)_([0-9]+)\.wav$/);
+      const talent = pathname.match(/\/sounds\/talentcontent\/season_(\d+)\/(\d+)_([0-9]+)\.(?:mp3|wav)$/);
       if (talent) {
         const season = talent[1];
         const talentId = talent[2];
@@ -468,7 +477,7 @@
       }
 
       // Team: season_X/<teamId>/<messageId>.wav -> dota_chatwheel_teamfandom_X_<teamId>_voiceline_<messageId>_message
-      const team = pathname.match(/\/sounds\/teamfancontent\/season_(\d+)\/(\d+)\/(\d+)\.wav$/);
+      const team = pathname.match(/\/sounds\/teamfancontent\/season_(\d+)\/(\d+)\/(\d+)\.(?:mp3|wav)$/);
       if (team) {
         const season = team[1];
         const teamId = team[2];

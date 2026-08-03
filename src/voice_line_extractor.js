@@ -1,198 +1,195 @@
-const fs = require("fs");
-const path = require("path");
-const { parseKeyValues } = require("./file_parser");
-const { soundToS3Url } = require("./voice_line_s3_sound_link");
+const fs = require('fs');
+const path = require('path');
+const { parseKeyValues } = require('./file_parser');
+const { soundToS3Url } = require('./voice_line_s3_sound_link');
 
-// Directory containing chat wheel files
-const chatWheelsDir = '../dota2/scripts/chat_wheels';
-const mainChatWheelFile = '../dota2/scripts/chat_wheel.txt';
-const localizationFile = '../dota2/resource/localization/teamfandom_english.txt';
-
+const repoRoot = path.join(__dirname, '..');
+const dotaRoot = process.argv[2]
+  ? path.resolve(process.argv[2])
+  : path.join(repoRoot, 'dota2');
+const chatWheelsDir = path.join(dotaRoot, 'scripts', 'chat_wheels');
+const mainChatWheelFile = path.join(dotaRoot, 'scripts', 'chat_wheel.txt');
 const allVoiceLines = [];
 const allParsedData = {};
-let localizationData = {};
 
-let filesProcessed = 0;
-let filesToProcess = [];
+const localizationData = loadEnglishLocalization();
+const releaseLinesBySound = loadReleaseLines();
+const soundEventFiles = loadSoundEventFiles();
 
-// First, load the localization file
-console.log('Loading localization file...');
-try {
-  const localizationContent = fs.readFileSync(localizationFile, 'utf8');
-  const parsed = parseKeyValues(localizationContent);
-  if (parsed.lang?.Tokens) {
-    localizationData = parsed.lang.Tokens;
-    console.log(`Loaded ${Object.keys(localizationData).length} localization entries`);
+const filesToProcess = fs.readdirSync(chatWheelsDir)
+  .filter((file) => file.endsWith('.txt'))
+  .sort()
+  .map((file) => path.join(chatWheelsDir, file));
+filesToProcess.push(mainChatWheelFile);
+
+for (const filePath of filesToProcess) {
+  processChatWheelFile(filePath);
+}
+
+allVoiceLines.sort((a, b) =>
+  a.category.localeCompare(b.category) ||
+  String(a.source || '').localeCompare(String(b.source || '')) ||
+  String(a.message_id || '').localeCompare(String(b.message_id || ''), undefined, { numeric: true })
+);
+
+const outputPath = path.join(__dirname, 'voice_line_list.json');
+const simplifiedPath = path.join(__dirname, 'voice_lines_simplified.json');
+fs.writeFileSync(outputPath, `${JSON.stringify(allParsedData, null, 2)}\n`);
+fs.writeFileSync(simplifiedPath, `${JSON.stringify({ voice_lines: allVoiceLines }, null, 2)}\n`);
+
+const entriesWithUrl = allVoiceLines.filter((line) => line.sound_url).length;
+console.log(`Processed ${filesToProcess.length} chat-wheel files`);
+console.log(`Created ${simplifiedPath} with ${allVoiceLines.length} voice lines`);
+console.log(`Entries with S3 URLs: ${entriesWithUrl}`);
+console.log(`Entries without S3 URLs: ${allVoiceLines.length - entriesWithUrl}`);
+
+function processChatWheelFile(filePath) {
+  const fileName = path.basename(filePath);
+  const parsedData = parseKeyValues(fs.readFileSync(filePath, 'utf8'));
+  const messages = parsedData.chat_wheel?.messages;
+
+  if (!messages) {
+    return;
   }
-} catch (err) {
-  console.error('Error loading localization file:', err);
+
+  allParsedData[fileName] = parsedData;
+  const isMainChatWheel = fileName === 'chat_wheel.txt';
+
+  for (const [key, value] of Object.entries(messages)) {
+    if (!value.sound || (isMainChatWheel && !shouldIncludeMainEntry(key))) {
+      continue;
+    }
+
+    const releaseLine = releaseLinesBySound.get(value.sound);
+    const resolvedLabel = resolveLocalization(value.label);
+    const resolvedMessage = resolveLocalization(value.message);
+    if (hasUnresolvedLocalization(resolvedLabel) || hasUnresolvedLocalization(resolvedMessage)) {
+      continue;
+    }
+
+    const category = getVoiceLineCategory(fileName, key);
+    const audioPath = getPlayableAudioPath(value.sound, releaseLine);
+    const soundUrl = soundToS3Url(value.sound, audioPath);
+    const localizationKey = releaseLine?.localization_key || stripTokenPrefix(value.translation);
+    const localizationFallbackKey = releaseLine?.localization_label_key;
+    const resolvedSource = resolveLocalization(value.source);
+
+    const voiceLineEntry = {
+      id: key,
+      message_id: value.message_id,
+      label: resolvedLabel,
+      message: resolvedMessage,
+      sound: value.sound,
+      source: getVoiceLineSource(category, releaseLine, resolvedSource),
+      all_chat: value.all_chat === '1',
+      file_source: fileName,
+      category
+    };
+
+    if (soundUrl) voiceLineEntry.sound_url = soundUrl;
+    if (audioPath) voiceLineEntry.audio_path = audioPath;
+    if (localizationKey) voiceLineEntry.localization_key = localizationKey;
+    if (localizationFallbackKey) {
+      voiceLineEntry.localization_fallback_key = localizationFallbackKey;
+    }
+
+    allVoiceLines.push(voiceLineEntry);
+  }
 }
 
-// Read all files from the chat_wheels directory
-console.log(`\nScanning directory: ${chatWheelsDir}`);
-try {
-  const files = fs.readdirSync(chatWheelsDir);
-  filesToProcess = files
-    .filter(file => file.endsWith('.txt'))
-    .map(file => path.join(chatWheelsDir, file));
-  
-  // Add the main chat_wheel.txt file
-  filesToProcess.push(mainChatWheelFile);
-  
-  console.log(`Found ${filesToProcess.length} .txt files to process (including main chat_wheel.txt)\n`);
-} catch (err) {
-  console.error('Error reading chat_wheels directory:', err);
-  process.exit(1);
+function loadEnglishLocalization() {
+  const tokens = {};
+  for (const family of ['teamfandom', 'dota']) {
+    const filePath = path.join(dotaRoot, 'resource', 'localization', `${family}_english.txt`);
+    const parsed = parseKeyValues(fs.readFileSync(filePath, 'utf8'));
+    Object.assign(tokens, parsed.lang?.Tokens || {});
+  }
+  return tokens;
 }
 
-// Helper function to resolve localization strings
+function loadReleaseLines() {
+  const manifestPath = path.join(dotaRoot, 'output', 'ti2026_voice_lines.json');
+  if (!fs.existsSync(manifestPath)) return new Map();
+
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  return new Map(manifest.voice_lines.map((line) => [line.sound_event, line]));
+}
+
+function loadSoundEventFiles() {
+  const soundEventsPath = path.join(dotaRoot, 'soundevents', 'game_sounds.vsndevts');
+  if (!fs.existsSync(soundEventsPath)) return new Map();
+
+  const data = fs.readFileSync(soundEventsPath, 'utf8');
+  const mappings = new Map();
+  const eventPattern = /^\s*([A-Za-z0-9_.]+)\s*=\s*\{([\s\S]*?)^\s*\}/gm;
+  let match;
+  while ((match = eventPattern.exec(data)) !== null) {
+    const fileMatch = match[2].match(/vsnd_files\s*=\s*"([^"]+)"/);
+    if (fileMatch) mappings.set(match[1], fileMatch[1]);
+  }
+  return mappings;
+}
+
 function resolveLocalization(value) {
   if (typeof value === 'string' && value.startsWith('#')) {
-    const key = value.substring(1); // Remove the '#' prefix
-    return localizationData[key] || value; // Return original if not found
+    return localizationData[value.slice(1)] || value;
   }
   return value;
 }
 
-// Process each file
-filesToProcess.forEach((filePath) => {
-  // Extract just the file name
-  const fileName = path.basename(filePath);
-  
-  fs.readFile(filePath, "utf8", (err, data) => {
-    if (err) {
-      console.error(`Error reading file ${filePath}:`, err);
-      filesProcessed++;
-      checkIfComplete();
-      return;
-    }
+function hasUnresolvedLocalization(value) {
+  return typeof value === 'string' && value.startsWith('#');
+}
 
-    try {
-      const parsedData = parseKeyValues(data);
-      
-      // Skip if the file doesn't have the expected structure
-      if (!parsedData.chat_wheel?.messages) {
-        console.log(`Skipped ${fileName}: No chat_wheel.messages structure found`);
-        filesProcessed++;
-        checkIfComplete();
-        return;
-      }
-      
-      // Store parsed data for this file
-      allParsedData[fileName] = parsedData;
-      
-      let voiceLinesFound = 0;
-      let skippedDueToLocalization = 0;
-      
-      // Check if this is the main chat_wheel.txt file
-      const isMainChatWheel = fileName === 'chat_wheel.txt';
-      
-      // Collect voice lines from this file (only entries with sound property)
-      Object.entries(parsedData.chat_wheel.messages).forEach(([key, value]) => {
-        // Only process entries that have a sound property
-        if (value.sound) {
-          // If this is the main chat_wheel.txt, only include entries starting with Community_TI14 or VoiceOfGod
-          if (isMainChatWheel && !key.startsWith('Community_TI14') && !key.startsWith('VoiceOfGod')) {
-            return;
-          }
-          
-          const resolvedLabel = resolveLocalization(value.label);
-          const resolvedMessage = resolveLocalization(value.message);
-          
-          // Skip if localization failed (still has '#' prefix)
-          if ((typeof resolvedLabel === 'string' && resolvedLabel.startsWith('#')) ||
-              (typeof resolvedMessage === 'string' && resolvedMessage.startsWith('#'))) {
-            skippedDueToLocalization++;
-            return;
-          }
-          
-          // Generate S3 URL for the sound
-          const soundUrl = soundToS3Url(value.sound);
-          
-          // Create the voice line entry
-          const voiceLineEntry = {
-            id: key,
-            message_id: value.message_id,
-            label: resolvedLabel,
-            message: resolvedMessage,
-            sound: value.sound,
-            source: isMainChatWheel ? 'TI_2025' : value.source,
-            all_chat: value.all_chat === "1",
-            file_source: fileName,
-            category: isMainChatWheel ? 'TI_2025' : getVoiceLineCategory(fileName, key)
-          };
-          
-          // Add sound_url if it was successfully generated
-          if (soundUrl) {
-            voiceLineEntry.sound_url = soundUrl;
-          }
-          
-          allVoiceLines.push(voiceLineEntry);
-          voiceLinesFound++;
-        }
-      });
-      
-      if (skippedDueToLocalization > 0) {
-        console.log(`Processed ${fileName}: Found ${voiceLinesFound} voice lines (skipped ${skippedDueToLocalization} due to missing localization)`);
-      } else {
-        console.log(`Processed ${fileName}: Found ${voiceLinesFound} voice lines`);
-      }
-      
-      filesProcessed++;
-      checkIfComplete();
-      
-    } catch (parseErr) {
-      console.log(`Skipped ${fileName}: Parse error - ${parseErr.message}`);
-      filesProcessed++;
-      checkIfComplete();
-    }
-  });
-});
+function stripTokenPrefix(value) {
+  return typeof value === 'string' && value.startsWith('#') ? value.slice(1) : undefined;
+}
 
-// Check if all files have been processed
-function checkIfComplete() {
-  if (filesProcessed === filesToProcess.length) {
-    // Write the complete parsed data to JSON file
-    const outputPath = "voice_line_list.json";
-    fs.writeFileSync(outputPath, JSON.stringify(allParsedData, null, 2));
-    console.log(`\nSuccessfully converted all files to ${outputPath}`);
-    
-    // Write simplified version with all voice lines
-    const simplifiedData = {
-      voice_lines: allVoiceLines
-    };
-    
-    const simplifiedPath = "voice_lines_simplified.json";
-    fs.writeFileSync(simplifiedPath, JSON.stringify(simplifiedData, null, 2));
-    console.log(`Created simplified version: ${simplifiedPath}`);
-    console.log(`Total voice lines found: ${allVoiceLines.length}`);
-    
-    // Count how many entries have sound_url added
-    const entriesWithUrl = allVoiceLines.filter(line => line.sound_url).length;
-    console.log(`Entries with S3 URLs: ${entriesWithUrl}`);
-    console.log(`Entries without S3 URLs: ${allVoiceLines.length - entriesWithUrl}`);
+function shouldIncludeMainEntry(key) {
+  return key.startsWith('Community_TI14') ||
+    key.startsWith('Community_TI15') ||
+    key.startsWith('VoiceOfGod') ||
+    key.startsWith('dc_');
+}
+
+function getPlayableAudioPath(sound, releaseLine) {
+  const releasePath = releaseLine?.audio_files_on_disk?.find((file) => /\.(mp3|wav)$/i.test(file));
+  if (releasePath) return releasePath;
+
+  const soundEventPath = soundEventFiles.get(sound);
+  if (!soundEventPath) return undefined;
+
+  const basePath = soundEventPath.replace(/\.vsnd$/i, '');
+  for (const extension of ['.mp3', '.wav']) {
+    const candidate = `${basePath}${extension}`;
+    if (fs.existsSync(path.join(repoRoot, candidate))) return candidate;
   }
+  return undefined;
+}
+
+function getVoiceLineSource(category, releaseLine, resolvedSource) {
+  if (releaseLine?.voice_actor) return releaseLine.voice_actor;
+  if (releaseLine?.team_name) return releaseLine.team_name;
+  if (releaseLine?.community_bundle) return releaseLine.community_bundle;
+  if (resolvedSource && !hasUnresolvedLocalization(resolvedSource)) return resolvedSource;
+  return category === 'Dark_Carnival' ? 'Dark Carnival' : category;
 }
 
 function getVoiceLineCategory(fileName, entryKey) {
-  // Check if the entry key starts with 'team'
-  if (entryKey && entryKey.toLowerCase().startsWith('team')) {
-    return 'Team';
+  if (entryKey.startsWith('dc_')) return 'Dark_Carnival';
+  if (entryKey.startsWith('Community_TI15') ||
+      fileName === 'stickers_chat_wheel_13.txt' ||
+      fileName.startsWith('teamfandom_chat_wheel_13_')) {
+    return 'TI_2026';
   }
-  
-  // Check for predefined categories based on file name
-  if (fileName.includes('ti2021_casters_chat_wheel.txt')) {
-    return 'TI_2021';
-  } else if (fileName.includes('stickers_chat_wheel_6.txt')) {
-    return 'TI_2022';
-  } else if (fileName.includes('stickers_chat_wheel_10.txt')) {
-    return 'TI_2023';
-  } else if (fileName.includes('stickers_chat_wheel_11.txt')) {
-    return 'TI_2024';
-  } else if (fileName.includes('stickers_chat_wheel_12.txt')) {
+  if (entryKey.startsWith('Community_TI14') || entryKey.startsWith('VoiceOfGod')) {
     return 'TI_2025';
   }
-  
-  // Default category for unrecognized files
+  if (entryKey.toLowerCase().startsWith('team')) return 'Team';
+  if (fileName.includes('ti2021_casters_chat_wheel.txt')) return 'TI_2021';
+  if (fileName.includes('stickers_chat_wheel_6.txt')) return 'TI_2022';
+  if (fileName.includes('stickers_chat_wheel_10.txt')) return 'TI_2023';
+  if (fileName.includes('stickers_chat_wheel_11.txt')) return 'TI_2024';
+  if (fileName.includes('stickers_chat_wheel_12.txt')) return 'TI_2025';
   return 'Other';
 }

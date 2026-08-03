@@ -3,24 +3,29 @@ const path = require('path');
 const { parseKeyValues } = require('./file_parser');
 
 /**
- * Builds JSON localization assets from Valve teamfandom localization files.
+ * Builds JSON localization assets used by voice-line entries.
  *
- * Input:  dota2/resource/localization/teamfandom_<lang>.txt
- * Output: localization/teamfandom_<lang>.json (object: { tokenKey: translatedString })
+ * Input:  dota2/resource/localization/{teamfandom,dota}_<lang>.txt
+ * Output: localization/{teamfandom,dota}_<lang>.json
  *
  * This lets you deploy without committing the full `dota2/` folder.
  */
 
 const repoRoot = path.join(__dirname, '..');
-const inputDir = path.join(repoRoot, 'dota2', 'resource', 'localization');
+const dotaRoot = process.argv[2]
+  ? path.resolve(process.argv[2])
+  : path.join(repoRoot, 'dota2');
+const inputDir = path.join(dotaRoot, 'resource', 'localization');
 const outputDir = path.join(repoRoot, 'localization');
+const localizationFamilies = ['teamfandom', 'dota'];
 
 function main() {
   ensureDir(outputDir);
 
-  const files = fs.readdirSync(inputDir).filter((f) => /^teamfandom_.+\.txt$/.test(f));
+  const familyPattern = new RegExp(`^(${localizationFamilies.join('|')})_.+\\.txt$`);
+  const files = fs.readdirSync(inputDir).filter((file) => familyPattern.test(file)).sort();
   if (files.length === 0) {
-    console.error(`No teamfandom_*.txt files found under: ${inputDir}`);
+    console.error(`No supported localization files found under: ${inputDir}`);
     process.exitCode = 1;
     return;
   }
@@ -28,7 +33,6 @@ function main() {
   let totalOut = 0;
 
   for (const file of files) {
-    const lang = file.replace(/^teamfandom_/, '').replace(/\.txt$/, '');
     const inputPath = path.join(inputDir, file);
 
     const raw = fs.readFileSync(inputPath, 'utf8');
@@ -40,8 +44,16 @@ function main() {
       continue;
     }
 
-    const outputPath = path.join(outputDir, `teamfandom_${lang}.json`);
-    fs.writeFileSync(outputPath, JSON.stringify(tokens, null, 2) + '\n', 'utf8');
+    const outputTokens = file.startsWith('dota_')
+      ? Object.fromEntries(
+          Object.entries(tokens).filter(([key]) =>
+            key.startsWith('dota_chatwheel_translation_darkcarnival_') ||
+            key.startsWith('dota_chatwheel_source_')
+          )
+        )
+      : tokens;
+    const outputPath = path.join(outputDir, file.replace(/\.txt$/, '.json'));
+    fs.writeFileSync(outputPath, JSON.stringify(outputTokens, null, 2) + '\n', 'utf8');
     totalOut++;
   }
 

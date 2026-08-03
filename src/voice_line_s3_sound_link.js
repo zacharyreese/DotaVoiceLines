@@ -11,7 +11,22 @@ const S3_BASE_URL = 'https://s3.dota2voicelines.com/sounds';
  * - "teamfandom.12.wxc.3" -> "https://s3.dota2voicelines.com/sounds/talentcontent/season_12/community_broadcasts/wxc_3.wav"
  * - "teamfandom.7.8261554.141835" -> "https://s3.dota2voicelines.com/sounds/teamfancontent/season_7/8261554/141835.wav"
  */
-function soundToS3Url(sound) {
+function audioPathToS3Url(audioPath) {
+  if (!audioPath || typeof audioPath !== 'string') return null;
+
+  const normalizedPath = audioPath.replace(/\\/g, '/').replace(/^\/+/, '');
+  if (!normalizedPath.startsWith('sounds/') || !/\.(mp3|wav)$/i.test(normalizedPath)) {
+    return null;
+  }
+
+  return `${S3_BASE_URL}/${normalizedPath.slice('sounds/'.length)}`;
+}
+
+function soundToS3Url(sound, audioPath) {
+  const explicitUrl = audioPathToS3Url(audioPath);
+  if (explicitUrl) return explicitUrl;
+  if (!sound || typeof sound !== 'string') return null;
+
   const parts = sound.split('.');
   
   // Handle talent.seasonXX.ID.SUBID format
@@ -84,5 +99,6 @@ function soundToS3Url(sound) {
 
 // Export function for use as a module
 module.exports = {
+  audioPathToS3Url,
   soundToS3Url
 };
