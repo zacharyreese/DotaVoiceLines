@@ -116,17 +116,22 @@ function loadReleaseLines() {
 }
 
 function loadSoundEventFiles() {
-  const soundEventsPath = path.join(dotaRoot, 'soundevents', 'game_sounds.vsndevts');
-  if (!fs.existsSync(soundEventsPath)) return new Map();
-
-  const data = fs.readFileSync(soundEventsPath, 'utf8');
+  const soundEventsPaths = [
+    path.join(dotaRoot, 'soundevents', 'game_sounds.vsndevts'),
+    path.join(dotaRoot, 'soundevents', 'stickers', 'soundevents_stickers_season13.vsndevts')
+  ].filter((filePath) => fs.existsSync(filePath));
   const mappings = new Map();
   const eventPattern = /^\s*([A-Za-z0-9_.]+)\s*=\s*\{([\s\S]*?)^\s*\}/gm;
-  let match;
-  while ((match = eventPattern.exec(data)) !== null) {
-    const fileMatch = match[2].match(/vsnd_files\s*=\s*"([^"]+)"/);
-    if (fileMatch) mappings.set(match[1], fileMatch[1]);
+
+  for (const soundEventsPath of soundEventsPaths) {
+    const data = fs.readFileSync(soundEventsPath, 'utf8');
+    let match;
+    while ((match = eventPattern.exec(data)) !== null) {
+      const fileMatch = match[2].match(/vsnd_files\s*=\s*(?:\[\s*)?"([^"]+)"/);
+      if (fileMatch) mappings.set(match[1], fileMatch[1]);
+    }
   }
+
   return mappings;
 }
 
